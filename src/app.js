@@ -27,8 +27,12 @@ APP.listen(PORT, () => console.log(`- || APP RUNNING ||--> http://localhost:${PO
 
 APP.get('/managementUser', (request, response) => {
   let sqlRequest = new sql.Request();
-  sqlRequest.query('SELECT * FROM Management_User FOR JSON PATH', (err, result) => {
-    response.send(result);
+  sqlRequest.execute('GET_Management_Users', (err, result) => {
+    if (err) {
+      console.error(err);
+    } else {
+      response.send(result.recordset);
+    }
   });
 });
 
