@@ -19,46 +19,34 @@ sql.connect(DB_CONFIG, error => {
   if (error) {
     console.error(error);
   } else {
-    console.log('✓ - CONNECTION POOL CREATED');
+    console.log('✅ - CONNECTION POOL CREATED');
   }
 });
 
 APP.listen(PORT, () => console.log(`- || APP RUNNING ||--> http://localhost:${PORT}`));
 
-APP.get('/managementUser', (request, response) => {
-  let sqlRequest = new sql.Request();
-  sqlRequest.execute('GET_Management_Users', (err, result) => {
-    if (err) {
-      console.error(err);
-    } else {
-      response.send(result.recordset);
-    }
-  });
-});
 
-APP.post('/managementUser/new', (request, response) => {
-  let body = request.body;
-  let sqlRequest = new sql.Request();
-  sqlRequest.input('userName', body.userName);
-  sqlRequest.input('password', body.password);
-  sqlRequest.input('email', body.email);
-  sqlRequest.input('secQues', body.securityQuestion);
-  sqlRequest.input('secAns', body.securityAnswer);
-  sqlRequest.input('roleID', body.roleID);
+// -----------------------------------------------------------------
+import roleRouter from './routes/role.js'
+import managementUserRouter from './routes/managementUser.js';
+import consecutiveRouter from './routes/consecutive.js';
+import languageRouter from './routes/language.js';
+import celebrityRouter from './routes/celebrity.js';
+import genreRouter from './routes/genre.js';
+import publisherRouter from './routes/publisher.js';
+import movieRouter from './routes/movie.js';
+import bookRouter from './routes/book.js';
+import logRouter from './routes/log.js';
 
-  sqlRequest.query(`INSERT INTO [Management_User] (userName, Password, Email, SecurityQuestion, SecurityAnswer, RoleID)` +
-    `VALUES (@userName, @password, @email, @secQues, @secAns, @roleID)`, (err, result) => {
-    response.send(result);
-  });
-});
+APP.use('/role', roleRouter);
+APP.use('/managementUser', managementUserRouter);
+APP.use('/consecutive', consecutiveRouter);
+APP.use('/language', languageRouter);
+APP.use('/celebrity', celebrityRouter);
+APP.use('/genre', genreRouter);
+APP.use('/publisher', publisherRouter);
+APP.use('/movie', movieRouter);
+APP.use('/book', bookRouter);
+APP.use('/log', logRouter);
 
-APP.post('/new/role', (request, response) => {
-  let body = request.body;
-  let sqlRequest = new sql.Request();
-  sqlRequest.input('roleName', body.roleName);
-  sqlRequest.query(`INSERT INTO [Roles] (Name)` +
-    `VALUES (@roleName)`, (err, result) => {
-    response.send(`Role ${body.roleName} created successfully`);
-  });
-});
 
