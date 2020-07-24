@@ -63,7 +63,7 @@ ROUTER.post('/authenticate', (request, response) => {
         } else if (result.recordset[0].Password !== password) {
           response.status(401).send(`❌ Wrong password for ${userName}`);
         } else {
-          response.json(responseData);
+          response.json(result.recordset[0]);
         }
       }
   });
