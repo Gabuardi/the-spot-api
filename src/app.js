@@ -1,6 +1,5 @@
 import express from 'express';
 import sql from 'mssql';
-import bodyParser from 'body-parser';
 
 const APP = express();
 const PORT = 3000;
@@ -13,7 +12,7 @@ const DB_CONFIG = {
   parseJSON: true,
 };
 
-APP.use(bodyParser.json());
+APP.use(express.json());
 
 sql.connect(DB_CONFIG, error => {
   if (error) {
