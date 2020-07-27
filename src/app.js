@@ -1,5 +1,9 @@
 import express from 'express';
 import sql from 'mssql';
+import simpleEncryptor from 'simple-encryptor';
+import randomString from 'randomstring';
+
+let encryptor = simpleEncryptor('123456789123456789');
 
 const APP = express();
 const PORT = 3000;
@@ -48,4 +52,10 @@ APP.use('/movie', movieRouter);
 APP.use('/book', bookRouter);
 APP.use('/log', logRouter);
 
+APP.post('/encrypt', (request, response) => {
+  let data = request.body;
+  let randomGeneratedString = randomString.generate(data.length, data.readeable);
+  let encryptedString = encryptor.encrypt(randomGeneratedString);
+  response.json({originalValue: randomGeneratedString, encryptedValue: encryptedString, encryptedLength: encryptedString.length});
+});
 
