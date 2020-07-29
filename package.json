@@ -7,7 +7,8 @@
   "author": "Josué Gabuardi <josuegabuardi@gmail.com> (https://www.linkedin.com/in/gabuardicr)",
   "contributors": [],
   "scripts": {
-    "start": "nodemon src/app.js"
+    "start": "nodemon src/app.js",
+    "azure": "node --experimental-modules src/app.js"
   },
   "dependencies": {
     "base-64": "^0.1.0",
