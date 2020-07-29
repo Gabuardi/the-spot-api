@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 const DB_CONFIG = {
   user: "server-boss",
   password: "123Queso",
-  server: "ulacit-ws-the-spot.database.windows.net",
+  server: "ulacit-ma-the-spot.database.windows.net",
   database: "TheSpotMVP",
   parseJSON: true,
 };
@@ -38,6 +38,7 @@ import publisherRouter from './routes/publisher.js';
 import movieRouter from './routes/movie.js';
 import bookRouter from './routes/book.js';
 import logRouter from './routes/log.js';
+import customerRouter from './routes/customer.js';
 
 APP.use('/role', roleRouter);
 APP.use('/managementUser', managementUserRouter);
@@ -49,6 +50,7 @@ APP.use('/publisher', publisherRouter);
 APP.use('/movie', movieRouter);
 APP.use('/book', bookRouter);
 APP.use('/log', logRouter);
+APP.use('/customer', customerRouter);
 
 APP.post('/encrypt', (request, response) => {
   let data = request.body;
