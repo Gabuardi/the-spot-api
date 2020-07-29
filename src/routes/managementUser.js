@@ -9,7 +9,7 @@ ROUTER.get('/', (request, response) => {
     if (err) {
       response.json({name: err.name, code: err.code, info: err.originalError.info});
     } else {
-      response.json(result.recordset);
+      response.json(result.recordset[0]);
     }
   });
 });
@@ -26,6 +26,7 @@ ROUTER.post('/', (request, response) => {
 
   sqlRequest.execute('[Management_User.INSERT]', (err) => {
     if (err) {
+      console.log(err);
       response.json({name: err.name, code: err.code, info: err.originalError.info});
     } else {
       response.send('✅ New management user created');
