@@ -1,7 +1,7 @@
 function sqlDateParser(sqlDate) {
   let dateRepresentationMiliseconds = Date.parse(sqlDate);
-  let date = new Date.parse(dateRepresentationMiliseconds);
-  `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+  let date = new Date(dateRepresentationMiliseconds);
+  return `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}`
 }
 
 export {sqlDateParser}
