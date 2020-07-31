@@ -1,7 +1,7 @@
 import express from 'express';
 import sql from 'mssql';
 import {encode, decode} from "../utils/codification.js";
-import {sqlDateParser} from "../utils/parsers.js";
+import {dateStringParser} from "../utils/parsers.js";
 
 const ROUTER = express.Router();
 
@@ -21,7 +21,7 @@ ROUTER.get('/', (request, response) => {
           firstName: decode(element.first_name),
           lastName: decode(element.last_name),
           email: decode(element.email_addr),
-          created: sqlDateParser(element.date_created)
+          created: dateStringParser(element.date_created)
         };
         decodedCustomerList.push(customer);
       });
