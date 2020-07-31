@@ -6,7 +6,7 @@ function encode(value) {
 }
 
 function decode(value) {
-  utf8.decode(base64.encode(value));
+  return utf8.decode(base64.decode(value));
 }
 
 export {encode, decode}

@@ -1,7 +1,6 @@
 import express from 'express';
 import sql from 'mssql';
-import utf8 from 'utf8';
-import base64 from 'base-64';
+import {encode, decode} from "../utils/codification.js";
 
 const ROUTER = express.Router();
 
@@ -16,11 +15,11 @@ ROUTER.get('/', (request, response) => {
       customerList.forEach(element => {
         let customer = {
           customerId: element.customer_id,
-          username: utf8.decode(base64.decode(element.username)),
-          password: utf8.decode(base64.decode(element.password)),
-          firstName: utf8.decode(base64.decode(element.first_name)),
-          lastName: base64.decode(element.last_name),
-          email: base64.decode(element.email_addr),
+          username: decode(element.username),
+          password: decode(element.password),
+          firstName: decode(element.first_name),
+          lastName: decode(element.last_name),
+          email: decode(element.email_addr),
           created: `${new Date(Date.parse(element.date_created)).toLocaleDateString()}`
         };
         decodedCustomerList.push(customer);
@@ -35,11 +34,11 @@ ROUTER.post('/', (request, response) => {
   let data = request.body;
 
   let sqlRequest = new sql.Request();
-  sqlRequest.input('username', base64.encode(utf8.encode(data.username)));
-  sqlRequest.input('password', base64.encode(utf8.encode(data.password)));
-  sqlRequest.input('first_name', base64.encode(utf8.encode(data.firstName)));
-  sqlRequest.input('last_name', base64.encode(utf8.encode(data.lastName)));
-  sqlRequest.input('email_addr', base64.encode(utf8.encode(data.email)));
+  sqlRequest.input('username', encode(data.username));
+  sqlRequest.input('password', encode(data.password));
+  sqlRequest.input('first_name', encode(data.firstName));
+  sqlRequest.input('last_name', encode(data.lastName));
+  sqlRequest.input('email_addr', encode(data.email));
   sqlRequest.execute('usp_customers_insert', (err) => {
     if (err) {
       response.json({name: err.name, code: err.code, info: err.originalError.info});
