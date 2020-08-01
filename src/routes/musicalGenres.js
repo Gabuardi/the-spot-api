@@ -9,8 +9,8 @@ function createDecodedData (encodedData){
   let decodedData = [];
   encodedData.forEach(el => {
     let data = {
-      editorialId: el.editorial_id,
-      name: decode(el.name)
+      musicalGenreId: el.musical_genre_id,
+      title: decode(el.title)
     };
     decodedData.push(data);
   });
@@ -30,7 +30,7 @@ ROUTER.get('/', (request, response) => {
     });
   };
 
-  sqlRequest.execute('[usp_editorials_get_all]', responseHandler)
+  sqlRequest.execute('[usp_musical_genres_get_all]', responseHandler);
 });
 
 // -------------------------------------------------------
@@ -39,15 +39,15 @@ ROUTER.get('/', (request, response) => {
 ROUTER.post('/', (request, response) => {
   let data = request.body;
   let sqlRequest = new sql.Request();
-  sqlRequest.input('name', encode(data.name));
-
+  sqlRequest.input('title', encode(data.title));
+  
   let responseHandler = (err, result) => {
     sqlResponseHandler(err, result, response, () => {
-      response.send(`✅ EDITORIAL -> ${data.name} has been added`)
-    })
-  }
+      response.send(`✅ MUSICAL GENRE -> ${data.title} has been added`)
+    });
+  };
 
-  sqlRequest.execute('[usp_editorials_insert]', responseHandler)
+  sqlRequest.execute('[usp_musical_genres_insert]', responseHandler);
 });
 
 export default ROUTER;

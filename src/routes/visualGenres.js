@@ -37,9 +37,9 @@ ROUTER.get('/', (request, response) => {
 // CREATE NEW ROLE
 // -------------------------------------------------------
 ROUTER.post('/', (request, response) => {
-  let requestData = request.body;
+  let data = request.body;
   let sqlRequest = new sql.Request();
-  sqlRequest.input('title', encode(requestData.title));
+  sqlRequest.input('title', encode(data.title));
   
   let responseHandler = (err, result) => {
     sqlResponseHandler(err, result, response, () => {
