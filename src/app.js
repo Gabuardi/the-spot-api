@@ -42,8 +42,8 @@ import customersRouter from './routes/customers.js';
 
 APP.use('/roles', rolesRouter);
 APP.use('/staff', staffRouter);
-APP.use('/consecutive', consecutivesRouter);
-APP.use('/language', languagesRouter);
+APP.use('/consecutives', consecutivesRouter);
+APP.use('/languages', languagesRouter);
 APP.use('/artists', artistsRouter);
 APP.use('/visualGenres', visualGenresRouter);
 APP.use('/editorials', editorialsRouter);
