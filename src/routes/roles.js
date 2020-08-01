@@ -32,7 +32,7 @@ ROUTER.post('/', (request, response) => {
     });
   };
 
-  sqlRequest.execute('usp_roles_insert', responseHandler);
+  sqlRequest.execute('[usp_roles_insert]', responseHandler);
 });
 
 // -------------------------------------------------------
@@ -48,7 +48,7 @@ ROUTER.get('/', (request, response) => {
     });
   };
 
-  sqlRequest.execute('usp_roles_get', responseHandler);
+  sqlRequest.execute('[usp_roles_get]', responseHandler);
 });
 
 export default ROUTER;

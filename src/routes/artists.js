@@ -1,22 +1,37 @@
 import express from 'express';
 import sql from 'mssql';
+import {encode, decode} from '../utils/codification.js';
+import {sqlResponseHandler} from "../utils/handlers.js";
 
 const ROUTER = express.Router();
+
+function createDecodedData (encodedData){
+  let decodedData = [];
+  encodedData.forEach(el => {
+    let data = {
+      artistId: el.artist_id,
+      fullName: decode(el.full_name)
+    };
+    decodedData.push(data);
+  });
+  return decodedData;
+};
 
 // -------------------------------------------------------
 // CREATE NEW ARTIST
 // -------------------------------------------------------
 ROUTER.post('/', (request, response) => {
-  let requestData = request.body;
+  let data = request.body;
   let sqlRequest = new sql.Request();
-  sqlRequest.input('full_name', requestData.fullName);
-  sqlRequest.execute('[Author_Actor_Artist.INSERT]', (err, result) => {
-    if (err) {
-      response.json({name: err.name, code: err.code, info: err.originalError.info});
-    } else {
-      response.send(`✅ New celebrity created`);
-    }
-  });
+  sqlRequest.input('full_name', data.fullName);
+  
+  let responseHandler = (err, result) => {
+    sqlResponseHandler(err, result, response, () => {
+      response.send(`✅ Artist -> ${data.full_name} has been added`);
+    });
+  };
+
+  sqlRequest.execute('[usp_artists_insert]', responseHandler);
 });
 
 // -------------------------------------------------------
@@ -24,13 +39,15 @@ ROUTER.post('/', (request, response) => {
 // -------------------------------------------------------
 ROUTER.get('/', (request, response) => {
   let sqlRequest = new sql.Request();
-  sqlRequest.execute('[Author_Actor_Artist.GET.All]', (err, result) => {
-    if (err) {
-      response.json({name: err.name, code: err.code, info: err.originalError.info});
-    } else {
-      response.json(result.recordset);
-    }
-  });
+  
+  let responseHandler = (err, result) => {
+    sqlResponseHandler(err, result, response, (response, result) => {
+      let decoded = createDecodedData(result.recordset);
+      response.json(decoded);
+    });
+  }
+
+  sqlRequest.execute('[usp_artists_get_all]', responseHandler);
 });
 
 export default ROUTER;
