@@ -36,6 +36,7 @@ import artistsRouter from './routes/artists.js';
 import visualGenresRouter from './routes/visualGenres.js';
 import musicalGenresRouter from './routes/musicalGenres.js';
 import editorialsRouter from './routes/editorials.js';
+import recordLabelsRouter from './routes/recordLabels.js';
 import moviesRouter from './routes/movies.js';
 import booksRouter from './routes/books.js';
 import logsRouter from './routes/logs.js';
@@ -49,6 +50,7 @@ APP.use('/artists', artistsRouter);
 APP.use('/visualGenres', visualGenresRouter);
 APP.use('/musicalGenres', musicalGenresRouter);
 APP.use('/editorials', editorialsRouter);
+APP.use('/recordLabels', recordLabelsRouter)
 APP.use('/movies', moviesRouter);
 APP.use('/books', booksRouter);
 APP.use('/logs', logsRouter);
