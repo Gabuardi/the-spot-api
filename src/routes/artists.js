@@ -18,23 +18,6 @@ function createDecodedData (encodedData){
 };
 
 // -------------------------------------------------------
-// CREATE NEW ARTIST
-// -------------------------------------------------------
-ROUTER.post('/', (request, response) => {
-  let data = request.body;
-  let sqlRequest = new sql.Request();
-  sqlRequest.input('full_name', data.fullName);
-  
-  let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, () => {
-      response.send(`✅ Artist -> ${data.full_name} has been added`);
-    });
-  };
-
-  sqlRequest.execute('[usp_artists_insert]', responseHandler);
-});
-
-// -------------------------------------------------------
 // GET ALL ARTISTS
 // -------------------------------------------------------
 ROUTER.get('/', (request, response) => {
@@ -48,6 +31,23 @@ ROUTER.get('/', (request, response) => {
   }
 
   sqlRequest.execute('[usp_artists_get_all]', responseHandler);
+});
+
+// -------------------------------------------------------
+// CREATE NEW ARTIST
+// -------------------------------------------------------
+ROUTER.post('/', (request, response) => {
+  let data = request.body;
+  let sqlRequest = new sql.Request();
+  sqlRequest.input('full_name', encode(data.fullName));
+  
+  let responseHandler = (err, result) => {
+    sqlResponseHandler(err, result, response, () => {
+      response.send(`✅ Artist -> ${data.full_name} has been added`);
+    });
+  };
+
+  sqlRequest.execute('[usp_artists_insert]', responseHandler);
 });
 
 export default ROUTER;
