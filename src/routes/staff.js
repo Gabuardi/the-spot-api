@@ -1,30 +1,54 @@
 import express from 'express';
 import sql from 'mssql';
+import {encode, decode} from '../utils/codification.js';
+import {dateStringParser} from "../utils/parsers.js";
+import {sqlResponseHandler} from "../utils/handlers.js";
 
 const ROUTER = express.Router();
 
+function createDecodedData (encodedData) {
+  let decodedData = [];
+  encodedData.forEach(element => {
+    let data = {
+      employeeId: element.employee_id,
+      username: decode(element.username),
+      password: decode(element.password),
+      securityQuestion: decode(element.security_question),
+      securityAnswer: decode(element.security_answer),
+      email: decode(element.email_addr),
+      created: dateStringParser(element.date_created)
+    };
+    decodedData.push(data);
+  });
+  return decodedData;
+}
+
+// GET ALL
 ROUTER.get('/', (request, response) => {
   let sqlRequest = new sql.Request();
-  sqlRequest.execute('[Management_User.GET.All]', (err, result) => {
-    if (err) {
-      response.json({name: err.name, code: err.code, info: err.originalError.info});
-    } else {
-      response.json(result.recordset[0]);
-    }
-  });
+
+  let responseHandler = (err, result) => {
+    sqlResponseHandler(err, result, response, (response, result) => {
+      let decodedData = createDecodedData(result.recordset);
+      response.json(decodedData);
+    });
+  };
+
+  sqlRequest.execute('[usp_staff_get_all]', responseHandler);
 });
 
+// INSERT
 ROUTER.post('/', (request, response) => {
   let body = request.body;
   let sqlRequest = new sql.Request();
-  sqlRequest.input('user_name', body.userName);
-  sqlRequest.input('password', body.password);
-  sqlRequest.input('email', body.email);
-  sqlRequest.input('security_question', body.securityQuestion);
-  sqlRequest.input('security_answer', body.securityAnswer);
-  sqlRequest.input('role', body.roleID);
+  sqlRequest.input('username', encode(body.userName));
+  sqlRequest.input('password', encode(body.password));
+  sqlRequest.input('email_addr', encode(body.email));
+  sqlRequest.input('security_question', encode(body.securityQuestion));
+  sqlRequest.input('security_answer', encode(body.securityAnswer));
+  sqlRequest.input('role_fk', body.roleID);
 
-  sqlRequest.execute('[Management_User.INSERT]', (err) => {
+  sqlRequest.execute('[usp_staff_insert]', (err) => {
     if (err) {
       console.log(err);
       response.json({name: err.name, code: err.code, info: err.originalError.info});
@@ -34,12 +58,14 @@ ROUTER.post('/', (request, response) => {
   });
 });
 
+
+// GET SPECIFIC
 ROUTER.get('/:userName', (request, response) => {
   let userId = request.params.userName;
   let sqlRequest = new sql.Request();
-  sqlRequest.input('user_name', userId);
+  sqlRequest.input('username', userId);
 
-  sqlRequest.execute('[Management_User.GET]', (err, result) => {
+  sqlRequest.execute('[usp_staff_get_specific]', (err, result) => {
     if (err) {
       response.json({name: err.name, code: err.code, info: err.originalError.info});
     } else {
@@ -48,14 +74,16 @@ ROUTER.get('/:userName', (request, response) => {
   });
 });
 
+
+// AUTHENTICATE
 ROUTER.post('/authenticate', (request, response) => {
   let body = request.body;
   let userName = body.userName;
   let password = body.password;
 
   let sqlRequest = new sql.Request();
-  sqlRequest.input('user_name', body.userName);
-  sqlRequest.execute('[Management_User.GET]', (err, result) => {
+  sqlRequest.input('username', body.userName);
+  sqlRequest.execute('[usp_staff_validate]', (err, result) => {
     if (err) {
       response.json({name: err.name, code: err.code, info: err.originalError.info});
     } else {
@@ -70,14 +98,16 @@ ROUTER.post('/authenticate', (request, response) => {
   });
 });
 
+
+// UPDATE PASSWORD
 ROUTER.put('/password/:userId', (request, response) => {
   let userId = request.params.userId;
   let newPassword = request.body.newPassword;
   let sqlRequest = new sql.Request();
-  sqlRequest.input('ID', userId);
+  sqlRequest.input('id', userId);
   sqlRequest.input('new_password', newPassword);
 
-  sqlRequest.execute('[Management_User.UPDATE.Password]', (err) => {
+  sqlRequest.execute('[usp_staff_update_password]', (err) => {
     if (err) {
       response.json({name: err.name, code: err.code, info: err.originalError.info});
     } else {
@@ -86,14 +116,15 @@ ROUTER.put('/password/:userId', (request, response) => {
   });
 });
 
+// UPDATE ROLE
 ROUTER.put('/role/:userName', (request, response) => {
   let userName = request.params.userName;
   let newRoleId = request.body.newRoleId;
   let sqlRequest = new sql.Request();
   sqlRequest.input('userName', userName);
-  sqlRequest.input('Role_ID', newRoleId);
+  sqlRequest.input('role_fk', newRoleId);
 
-  sqlRequest.execute('[Management_User.UPDATE.Role]', (err) => {
+  sqlRequest.execute('[usp_staff_update_role]', (err) => {
     if (err) {
       response.json({name: err.name, code: err.code, info: err.originalError.info});
     } else {
