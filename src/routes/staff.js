@@ -23,7 +23,9 @@ function createDecodedData (encodedData) {
   return decodedData;
 }
 
-// GET ALL
+// -------------------------------------------------------
+// GET ALL STAFF
+// -------------------------------------------------------
 ROUTER.get('/', (request, response) => {
   let sqlRequest = new sql.Request();
 
@@ -37,7 +39,9 @@ ROUTER.get('/', (request, response) => {
   sqlRequest.execute('[usp_staff_get_all]', responseHandler);
 });
 
-// INSERT
+// -------------------------------------------------------
+// CREATE NEW EMPLOYEE
+// -------------------------------------------------------
 ROUTER.post('/', (request, response) => {
   let body = request.body;
   let sqlRequest = new sql.Request();
@@ -59,7 +63,9 @@ ROUTER.post('/', (request, response) => {
 });
 
 
-// GET SPECIFIC
+// -------------------------------------------------------
+// GET SPECIFIC EMPLOYEE
+// -------------------------------------------------------
 ROUTER.get('/:userName', (request, response) => {
   let userId = request.params.userName;
   let sqlRequest = new sql.Request();
@@ -75,7 +81,9 @@ ROUTER.get('/:userName', (request, response) => {
 });
 
 
+// -------------------------------------------------------
 // AUTHENTICATE
+// -------------------------------------------------------
 ROUTER.post('/authenticate', (request, response) => {
   let body = request.body;
   let userName = body.userName;
@@ -99,7 +107,9 @@ ROUTER.post('/authenticate', (request, response) => {
 });
 
 
-// UPDATE PASSWORD
+// -------------------------------------------------------
+// EMPLOYEE UPDATE PASSWORD
+// -------------------------------------------------------
 ROUTER.put('/password/:userId', (request, response) => {
   let userId = request.params.userId;
   let newPassword = request.body.newPassword;
@@ -116,7 +126,9 @@ ROUTER.put('/password/:userId', (request, response) => {
   });
 });
 
-// UPDATE ROLE
+// -------------------------------------------------------
+// EMPLOYEE UPDATE ROLE
+// -------------------------------------------------------
 ROUTER.put('/role/:userName', (request, response) => {
   let userName = request.params.userName;
   let newRoleId = request.body.newRoleId;
