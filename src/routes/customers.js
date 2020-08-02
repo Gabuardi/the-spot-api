@@ -20,6 +20,42 @@ function generateCustomer(el) {
 };
 
 // -------------------------------------------------------
+// GET ALL CUSTOMERS
+// -------------------------------------------------------
+ROUTER.get('/', (request, response) => {
+  let sqlRequest = new sql.Request();
+
+  let responseHandler = (err, result) => {
+    sqlResponseHandler(err, result, response, (response, result) => {
+      let decodedCustomerList = createDecodedData(result.recordset, generateCustomer);
+      response.json(decodedCustomerList);
+    });
+  };
+
+  sqlRequest.execute('usp_customers_get_all', responseHandler);
+});
+
+// -------------------------------------------------------
+// GET SPECIFIC CUSTOMER
+// -------------------------------------------------------
+ROUTER.get('/:customerId', (request, response) => {
+  let customerId = request.params.customerId;
+
+  let sqlRequest = new sql.Request();
+
+  sqlRequest.input('customer_id', customerId);
+
+  let responseHandler = (err, result) => {
+    sqlResponseHandler(err, result, response, (response, result) => {
+      let decodedCustomerList = createDecodedData(result.recordset, generateCustomer);
+      response.json(decodedCustomerList);
+    });
+  };
+
+  sqlRequest.execute('usp_customers_get_specific', responseHandler);
+});
+
+// -------------------------------------------------------
 // CREATE NEW CUSTOMER
 // -------------------------------------------------------
 ROUTER.post('/', (request, response) => {
@@ -37,22 +73,6 @@ ROUTER.post('/', (request, response) => {
     sqlResponseHandler(err, result, response, () => response.send(`✅ CUSTOMER -> ${data.username} has been created`));
   };
   sqlRequest.execute('usp_customers_insert', responseHandler);
-});
-
-// -------------------------------------------------------
-// GET ALL CUSTOMERS
-// -------------------------------------------------------
-ROUTER.get('/', (request, response) => {
-  let sqlRequest = new sql.Request();
-
-  let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, (response, result) => {
-      let decodedCustomerList = createDecodedData(result.recordset, generateCustomer);
-      response.json(decodedCustomerList);
-    });
-  };
-
-  sqlRequest.execute('usp_customers_get_all', responseHandler);
 });
 
 export default ROUTER;
