@@ -28,29 +28,33 @@ APP.listen(PORT, () => console.log(`- || APP RUNNING ||--> http://localhost:${PO
 
 
 // -----------------------------------------------------------------
-import roleRouter from './routes/role.js'
-import managementUserRouter from './routes/managementUser.js';
-import consecutiveRouter from './routes/consecutive.js';
-import languageRouter from './routes/language.js';
-import celebrityRouter from './routes/celebrity.js';
-import visualGenreRouter from './routes/visualGenre.js';
-import publisherRouter from './routes/publisher.js';
-import movieRouter from './routes/movie.js';
-import bookRouter from './routes/book.js';
-import logRouter from './routes/log.js';
-import customerRouter from './routes/customer.js';
+import rolesRouter from './routes/roles.js'
+import staffRouter from './routes/staff.js';
+import consecutivesRouter from './routes/consecutives.js';
+import languagesRouter from './routes/languages.js';
+import artistsRouter from './routes/artists.js';
+import visualGenresRouter from './routes/visualGenres.js';
+import musicalGenresRouter from './routes/musicalGenres.js';
+import editorialsRouter from './routes/editorials.js';
+import recordLabelsRouter from './routes/recordLabels.js';
+import moviesRouter from './routes/movies.js';
+import booksRouter from './routes/books.js';
+import logsRouter from './routes/logs.js';
+import customersRouter from './routes/customers.js';
 
-APP.use('/role', roleRouter);
-APP.use('/managementUser', managementUserRouter);
-APP.use('/consecutive', consecutiveRouter);
-APP.use('/language', languageRouter);
-APP.use('/celebrity', celebrityRouter);
-APP.use('/visualGenre', visualGenreRouter);
-APP.use('/publisher', publisherRouter);
-APP.use('/movie', movieRouter);
-APP.use('/book', bookRouter);
-APP.use('/log', logRouter);
-APP.use('/customer', customerRouter);
+APP.use('/roles', rolesRouter);
+APP.use('/staff', staffRouter);
+APP.use('/consecutives', consecutivesRouter);
+APP.use('/languages', languagesRouter);
+APP.use('/artists', artistsRouter);
+APP.use('/visualGenres', visualGenresRouter);
+APP.use('/musicalGenres', musicalGenresRouter);
+APP.use('/editorials', editorialsRouter);
+APP.use('/recordLabels', recordLabelsRouter)
+APP.use('/movies', moviesRouter);
+APP.use('/books', booksRouter);
+APP.use('/logs', logsRouter);
+APP.use('/customers', customersRouter); booksRouter
 
 APP.post('/encrypt', (request, response) => {
   let data = request.body;
