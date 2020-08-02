@@ -1,44 +1,37 @@
 import express from 'express';
 import sql from 'mssql';
+import {createDecodedData} from '../utils/common.js';
 import {encode, decode} from '../utils/codification.js';
 import {dateStringParser} from "../utils/parsers.js";
 import {sqlResponseHandler} from "../utils/handlers.js";
 
 const ROUTER = express.Router();
 
-function createDecodedData (encodedData, identifier) {
-  let decodedData = [];
-  if (identifier === 'all'){
-    encodedData.forEach(el => {
-      let data = {
-        username: decode(el.username),
-        email: decode(el.email_addr),
-        securityQuestion: decode(el.security_question),
-        securityAnswer: decode(el.security_answer),
-        roleFk: el.role_fk,
-        created: dateStringParser(el.date_created),
-        profilePic: el.profile_pic
-      };
-      decodedData.push(data);
-    });
-  } else if (identifier === 'specific') {
-    encodedData.forEach(el => {
-      let data = {
-        employeeId: el.employee_id,
-        username: decode(el.username),
-        password: decode(el.password),
-        email: decode(el.email_addr),
-        securityQuestion: decode(el.security_question),
-        securityAnswer: decode(el.security_answer),
-        roleFk: el.role_fk,
-        created: dateStringParser(el.date_created),
-        profilePic: el.profile_pic
-      };
-      decodedData.push(data);
-    });
+function generatePublicStaff(el){
+  return{
+    username: decode(el.username),
+    email: decode(el.email_addr),
+    securityQuestion: decode(el.security_question),
+    securityAnswer: decode(el.security_answer),
+    roleFk: el.role_fk,
+    created: dateStringParser(el.date_created),
+    profilePic: el.profile_pic
   }
-  return decodedData;
-}
+};
+
+function generatePrivateStaff(el){
+  return{
+    mployeeId: el.employee_id,
+    username: decode(el.username),
+    password: decode(el.password),
+    email: decode(el.email_addr),
+    securityQuestion: decode(el.security_question),
+    securityAnswer: decode(el.security_answer),
+    roleFk: el.role_fk,
+    created: dateStringParser(el.date_created),
+    profilePic: el.profile_pic
+  }
+};
 
 // -------------------------------------------------------
 // GET ALL STAFF
@@ -48,7 +41,7 @@ ROUTER.get('/', (request, response) => {
 
   let responseHandler = (err, result) => {
     sqlResponseHandler(err, result, response, (response, result) => {
-      let decoded = createDecodedData(result.recordset, 'all');
+      let decoded = createDecodedData(result.recordset, generatePublicStaff);
       response.json(decoded);
     });
   };
@@ -68,7 +61,7 @@ ROUTER.get('/:username', (request, response) => {
 
   let responseHandler = (err, result) => {
     sqlResponseHandler(err, result, response, (err, result) => {
-      let decoded = createDecodedData(result.recordset, 'specific')
+      let decoded = createDecodedData(result.recordset, generatePrivateStaff)
       response.json(decoded);
     })
   }

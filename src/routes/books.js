@@ -1,10 +1,33 @@
 import express from 'express';
 import sql from 'mssql';
+import {encode, decode} from '../utils/codification.js';
+import {sqlResponseHandler} from "../utils/handlers.js";
 
 const ROUTER = express.Router();
 
+function createDecodedData (encodedData, identifier){
+  let decodedData = [];
+  if (identifier === 'all'){
+
+  }else if (identifier === 'titles'){
+    
+  }else if (identifier === 'specific'){
+
+  }
+}
+
+// -------------------------------------------------------
+// GET ALL BOOKS TITLES
+// -------------------------------------------------------
 ROUTER.get('/', (request, response) => {
   let sqlRequest = new sql.Request();
+
+  let responseHandler = (err, result) => {
+    sqlResponseHandler(err, result, response, (response, result) => {
+      
+    })
+  }
+
   sqlRequest.execute('[Book.GET.All]', (err, result) => {
     if (err) {
       response.json({name: err.name, code: err.code, info: err.originalError.info});
@@ -14,23 +37,27 @@ ROUTER.get('/', (request, response) => {
   });
 });
 
+// -------------------------------------------------------
+// ADD NEW BOOK
+// -------------------------------------------------------
 ROUTER.post('/', (request, response) => {
-  let requestData = request.body;
-  let sqlRequest = new sql.Request();
-  sqlRequest.input('Title', requestData.title);
-  sqlRequest.input('Year', requestData.year);
-  sqlRequest.input('LanguageID', requestData.languageId);
-  sqlRequest.input('AAAID', requestData.celebrityId);
-  sqlRequest.input('GenreID', requestData.genreId);
-  sqlRequest.input('EditorialID', requestData.publisherId);
+  let data = request.body;
 
-  sqlRequest.execute('[Book.INSERT]', (err, result) => {
-    if (err) {
-      response.json({name: err.name, code: err.code, info: err.originalError.info});
-    } else {
-      response.send(`✅ MOVIE -> ${requestData.title} has been created`);
-    }
-  });
+  let sqlRequest = new sql.Request();
+
+  sqlRequest.input('title', data.title);
+  sqlRequest.input('release_year', data.release_year);
+  sqlRequest.input('language_fk', data.language_fk);
+  sqlRequest.input('artist_fk', data.artist_fk);
+  sqlRequest.input('editorial_fk', data.editorial_fk);
+
+  let responseHandler = (err, result) => {
+    sqlResponseHandler(err, result, response, () => {
+      response.send(`✅ MOVIE -> ${data.title} has been added`);
+    });
+  };
+
+  sqlRequest.execute('[usp_books_insert]', responseHandler);
 });
 
 export default ROUTER;
