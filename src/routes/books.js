@@ -5,37 +5,27 @@ import {sqlResponseHandler} from "../utils/handlers.js";
 
 const ROUTER = express.Router();
 
-function createDecodedData (encodedData, identifier){
-  let decodedData = [];
-  if (identifier === 'all'){
-
-  }else if (identifier === 'titles'){
-    
-  }else if (identifier === 'specific'){
-
-  }
-}
 
 // -------------------------------------------------------
 // GET ALL BOOKS TITLES
 // -------------------------------------------------------
-ROUTER.get('/', (request, response) => {
-  let sqlRequest = new sql.Request();
+// ROUTER.get('/', (request, response) => {
+//   let sqlRequest = new sql.Request();
 
-  let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, (response, result) => {
-      
-    })
-  }
+//   let responseHandler = (err, result) => {
+//     sqlResponseHandler(err, result, response, (response, result) => {
+//       let 
+//     })
+//   }
 
-  sqlRequest.execute('[Book.GET.All]', (err, result) => {
-    if (err) {
-      response.json({name: err.name, code: err.code, info: err.originalError.info});
-    } else {
-      response.json(result.recordset);
-    }
-  });
-});
+//   sqlRequest.execute('[Book.GET.All]', (err, result) => {
+//     if (err) {
+//       response.json({name: err.name, code: err.code, info: err.originalError.info});
+//     } else {
+//       response.json(result.recordset);
+//     }
+//   });
+// });
 
 // -------------------------------------------------------
 // ADD NEW BOOK
