@@ -166,7 +166,7 @@ ROUTER.post('/log/:username', (request, response) => {
   sqlRequest.input('editorial_fk', data.editorial_fk);
 
   let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, () => esponse.send(`✅ MOVIE log saved`));
+    sqlResponseHandler(err, result, response, () => esponse.send(`✅ BOOK log saved`));
   };
 
   sqlRequest.execute('[usp_activity_logs_book]', responseHandler);

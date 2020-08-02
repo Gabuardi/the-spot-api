@@ -8,6 +8,7 @@ const ROUTER = express.Router();
 
 function generateMovie(el) {
   return {
+    movieId: el.movie_id,
     title: decode(el.title),
     releaseYear: el.release_year,
     languageFk: el.language_fk,
@@ -63,7 +64,7 @@ ROUTER.post('/', (request, response) => {
 
   let sqlRequest = new sql.Request();
 
-  sqlRequest.input('title', data.title);
+  sqlRequest.input('title', encode(data.title));
   sqlRequest.input('release_year', data.release_year);
   sqlRequest.input('language_fk', data.language_fk);
 
@@ -136,6 +137,30 @@ ROUTER.post('/genre/:movieId', (request, response) => {
   };
 
   sqlRequest.execute('[usp_movie_genres_insert]', responseHandler);
+});
+
+// -------------------------------------------------------
+// MOVIE LOG
+// > NEEDS REVISION !!!
+// -------------------------------------------------------
+ROUTER.post('/log/:username', (request, response) => {
+  let username = request.params.username;
+  let data = request.body;
+
+  let sqlRequest = new sql.Request();
+
+  sqlRequest.input('username', encode(username)),
+  sqlRequest.input('reg_id', data.reg_id),
+  sqlRequest.input('action_id', 1),
+  sqlRequest.input('title', encode(data.title));
+  sqlRequest.input('release_year', data.release_year);
+  sqlRequest.input('language_fk', data.language_fk);
+
+  let responseHandler = (err, result) => {
+    sqlResponseHandler(err, result, response, () => esponse.send(`✅ MOVIE log saved`));
+  };
+
+  sqlRequest.execute('[usp_activity_logs_movie]', responseHandler);
 });
 
 export default ROUTER;
