@@ -6,6 +6,14 @@ import {sqlResponseHandler} from "../utils/handlers.js";
 
 const ROUTER = express.Router();
 
+function parseGenres(genresArray) {
+  let genres = [];
+  genresArray.forEach(el => {
+    genres.push(decode(el.title));
+  });
+  return genres;
+};
+
 function generateBook(el) {
   return {
     bookId: el.book_id,
@@ -14,7 +22,7 @@ function generateBook(el) {
     languageFk: el.language_fk,
     artistFk: el.artist_fk,
     editorialFk: el.editorial_fk,
-    genres: el.genre
+    genres: parseGenres(el.genres)
   }
 };
 
@@ -34,7 +42,7 @@ ROUTER.get('/', (request, response) => {
 
   let responseHandler = (err, result) => {
     sqlResponseHandler(err, result, response, (response, result) => {
-      let decoded = createDecodedData(result.recordset, generateBook);
+      let decoded = createDecodedData(result.recordset[0], generateBook);
       response.json(decoded);
     });
   };
@@ -56,26 +64,6 @@ ROUTER.get('/titles', (request, response) => {
   };
 
   sqlRequest.execute('[usp_books_get_titles]', responseHandler);
-});
-
-// -------------------------------------------------------
-// GET SPECIFIC BOOK
-// -------------------------------------------------------
-ROUTER.get('/:bookId', (request, response) => {
-  let bookId = request.params.bookId;
-
-  let sqlRequest = new sql.Request();
-
-  sqlRequest.input('book_id', bookId);
-
-  let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, (response, result) => {
-      let decoded = createDecodedData(result.recordset, generateBook);
-      response.json(decoded);
-    });
-  };
-
-  sqlRequest.execute('[usp_books_get_specific]', responseHandler);
 });
 
 // -------------------------------------------------------
@@ -171,5 +159,26 @@ ROUTER.post('/log/:username', (request, response) => {
 
   sqlRequest.execute('[usp_activity_logs_book]', responseHandler);
 });
+
+// -------------------------------------------------------
+// GET SPECIFIC BOOK (OPTIONAL)
+// -------------------------------------------------------
+// ROUTER.get('/:bookId', (request, response) => {
+//   let bookId = request.params.bookId;
+
+//   let sqlRequest = new sql.Request();
+
+//   sqlRequest.input('book_id', bookId);
+
+//   let responseHandler = (err, result) => {
+//     sqlResponseHandler(err, result, response, (response, result) => {
+//       // let decoded = createDecodedData(result.recordset[0], generateBook);
+//       // response.json(decoded);
+//       response.json(result.recordset);
+//     });
+//   };
+
+//   sqlRequest.execute('[usp_books_get_specific]', responseHandler);
+// });
 
 export default ROUTER;

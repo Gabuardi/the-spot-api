@@ -11,7 +11,7 @@ const DB_CONFIG = {
   password: "123Queso",
   server: "ulacit-ma-the-spot.database.windows.net",
   database: "TheSpotMVP",
-  parseJSON: true,
+  parseJSON: true
 };
 
 APP.use(express.json());
