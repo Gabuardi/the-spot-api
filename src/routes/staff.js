@@ -21,7 +21,7 @@ function generatePublicStaff(el) {
 
 function generatePrivateStaff(el) {
   return {
-    mployeeId: el.employee_id,
+    employeeId: el.employee_id,
     username: decode(el.username),
     password: decode(el.password),
     email: decode(el.email_addr),
@@ -123,7 +123,7 @@ ROUTER.post('/authenticate', (request, response) => {
 
 
 // -------------------------------------------------------
-// EMPLOYEE UPDATE PASSWORD
+// UPDATE EMPLOYEE PASSWORD
 // -------------------------------------------------------
 ROUTER.put('/password/:employeeId', (request, response) => {
   let userId = request.params.employeeId;
@@ -142,7 +142,7 @@ ROUTER.put('/password/:employeeId', (request, response) => {
 });
 
 // -------------------------------------------------------
-// EMPLOYEE UPDATE ROLE
+// UPDATE EMPLOYEE ROLE
 // -------------------------------------------------------
 ROUTER.put('/role/:username', (request, response) => {
   let username = request.params.username;

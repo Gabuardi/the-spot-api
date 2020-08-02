@@ -38,7 +38,7 @@ ROUTER.post('/', (request, response) => {
   sqlRequest.input('full_name', encode(data.fullName));
   
   let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, () => response.send(`✅ Artist -> ${data.full_name} has been added`));
+    sqlResponseHandler(err, result, response, () => response.send(`✅ Artist -> ${data.fullName} has been added`));
   };
 
   sqlRequest.execute('[usp_artists_insert]', responseHandler);
