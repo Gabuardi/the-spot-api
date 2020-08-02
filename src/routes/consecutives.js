@@ -87,22 +87,25 @@ ROUTER.post('/', (request, response) => {
 });
 
 // -------------------------------------------------------
-// UPDATE CONSECUTIVE ???? TODO
+// UPDATE CONSECUTIVE
 // -------------------------------------------------------
-ROUTER.put('/:current', (request, response) => {
-  let userName = request.params.userName;
-  let newRoleId = request.body.newRoleId;
-  let sqlRequest = new sql.Request();
-  sqlRequest.input('userName', userName);
-  sqlRequest.input('role_fk', newRoleId);
+ROUTER.put('/:consecutiveId', (request, response) => {
+  let consecutiveId = request.params.consecutiveId;
+  let prefix = request.body.prefix;
+  let maxValue = request.body.max_value;
 
-  sqlRequest.execute('[usp_staff_update_role]', (err) => {
-    if (err) {
-      response.json({name: err.name, code: err.code, info: err.originalError.info});
-    } else {
-      response.send(`✅ ${userName} role updated`);
-    }
-  });
+  let sqlRequest = new sql.Request();
+
+  sqlRequest.input('consecutive_id', consecutiveId);
+  sqlRequest.input('prefix', prefix);
+  sqlRequest.input('max_value', maxValue);
+
+  let responseHandler = (err, result) => {
+    sqlResponseHandler(err, result, response, () => {
+      response.send(`✅ Consecutive updated`);
+    });
+  };
+  sqlRequest.execute('[usp_consecutives_update]', responseHandler);
 });
 
 export default ROUTER;

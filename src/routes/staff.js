@@ -6,20 +6,37 @@ import {sqlResponseHandler} from "../utils/handlers.js";
 
 const ROUTER = express.Router();
 
-function createDecodedData (encodedData) {
+function createDecodedData (encodedData, identifier) {
   let decodedData = [];
-  encodedData.forEach(element => {
-    let data = {
-      employeeId: element.employee_id,
-      username: decode(element.username),
-      password: decode(element.password),
-      securityQuestion: decode(element.security_question),
-      securityAnswer: decode(element.security_answer),
-      email: decode(element.email_addr),
-      created: dateStringParser(element.date_created)
-    };
-    decodedData.push(data);
-  });
+  if (identifier === 'all'){
+    encodedData.forEach(el => {
+      let data = {
+        username: decode(el.username),
+        email: decode(el.email_addr),
+        securityQuestion: decode(el.security_question),
+        securityAnswer: decode(el.security_answer),
+        roleFk: el.role_fk,
+        created: dateStringParser(el.date_created),
+        profilePic: el.profile_pic
+      };
+      decodedData.push(data);
+    });
+  } else if (identifier === 'specific') {
+    encodedData.forEach(el => {
+      let data = {
+        employeeId: el.employee_id,
+        username: decode(el.username),
+        password: decode(el.password),
+        email: decode(el.email_addr),
+        securityQuestion: decode(el.security_question),
+        securityAnswer: decode(el.security_answer),
+        roleFk: el.role_fk,
+        created: dateStringParser(el.date_created),
+        profilePic: el.profile_pic
+      };
+      decodedData.push(data);
+    });
+  }
   return decodedData;
 }
 
@@ -31,8 +48,8 @@ ROUTER.get('/', (request, response) => {
 
   let responseHandler = (err, result) => {
     sqlResponseHandler(err, result, response, (response, result) => {
-      let decodedData = createDecodedData(result.recordset);
-      response.json(decodedData);
+      let decoded = createDecodedData(result.recordset, 'all');
+      response.json(decoded);
     });
   };
 
@@ -40,67 +57,74 @@ ROUTER.get('/', (request, response) => {
 });
 
 // -------------------------------------------------------
+// GET SPECIFIC EMPLOYEE
+// -------------------------------------------------------
+ROUTER.get('/:username', (request, response) => {
+  let username = request.params.username;
+
+  let sqlRequest = new sql.Request();
+
+  sqlRequest.input('username', encode(username));
+
+  let responseHandler = (err, result) => {
+    sqlResponseHandler(err, result, response, (err, result) => {
+      let decoded = createDecodedData(result.recordset, 'specific')
+      response.json(decoded);
+    })
+  }
+
+  sqlRequest.execute('[usp_staff_get_specific]', responseHandler);
+});
+
+// -------------------------------------------------------
 // CREATE NEW EMPLOYEE
 // -------------------------------------------------------
 ROUTER.post('/', (request, response) => {
-  let body = request.body;
+  let data = request.body;
+
   let sqlRequest = new sql.Request();
-  sqlRequest.input('username', encode(body.userName));
-  sqlRequest.input('password', encode(body.password));
-  sqlRequest.input('email_addr', encode(body.email));
-  sqlRequest.input('security_question', encode(body.securityQuestion));
-  sqlRequest.input('security_answer', encode(body.securityAnswer));
-  sqlRequest.input('role_fk', body.roleID);
 
-  sqlRequest.execute('[usp_staff_insert]', (err) => {
-    if (err) {
-      console.log(err);
-      response.json({name: err.name, code: err.code, info: err.originalError.info});
-    } else {
-      response.send('✅ New management user created');
-    }
-  });
+  sqlRequest.input('username', encode(data.username));
+  sqlRequest.input('password', encode(data.password));
+  sqlRequest.input('email_addr', encode(data.email_addr));
+  sqlRequest.input('security_question', encode(data.security_question));
+  sqlRequest.input('security_answer', encode(data.security_answer));
+  sqlRequest.input('role_fk', data.role_fk);
+
+  let responseHandler = (err, result) => {
+    sqlResponseHandler(err, result, response, () => {
+      response.send(`✅ New management user ${data.username} created`);
+    });
+  };
+
+  sqlRequest.execute('[usp_staff_insert]', responseHandler);
 });
-
-
-// -------------------------------------------------------
-// GET SPECIFIC EMPLOYEE
-// -------------------------------------------------------
-ROUTER.get('/:userName', (request, response) => {
-  let userId = request.params.userName;
-  let sqlRequest = new sql.Request();
-  sqlRequest.input('username', userId);
-
-  sqlRequest.execute('[usp_staff_get_specific]', (err, result) => {
-    if (err) {
-      response.json({name: err.name, code: err.code, info: err.originalError.info});
-    } else {
-      response.json(result.recordset);
-    }
-  });
-});
-
 
 // -------------------------------------------------------
 // AUTHENTICATE
 // -------------------------------------------------------
 ROUTER.post('/authenticate', (request, response) => {
   let body = request.body;
-  let userName = body.userName;
+  let username = body.username;
   let password = body.password;
 
   let sqlRequest = new sql.Request();
-  sqlRequest.input('username', body.userName);
+
+  sqlRequest.input('username', encode(username));
+  sqlRequest.input('password', encode(password));
+
   sqlRequest.execute('[usp_staff_validate]', (err, result) => {
     if (err) {
       response.json({name: err.name, code: err.code, info: err.originalError.info});
     } else {
         if (result.recordset.length === 0) {
-          response.status(404).send(`❌ Management user ${userName} not found`);
-        } else if (result.recordset[0].Password !== password) {
-          response.status(401).send(`❌ Wrong password for ${userName}`);
+          response.status(404).send(`❌ Management user ${username} not found`);
+        } else if (decode(result.recordset[0].password) !== password) {
+          response.status(401).send(`❌ Wrong password for ${username}`);
         } else {
-          response.json(result.recordset[0]);
+          // let decoded = createDecodedData(result.recordset, 'specific')
+          // response.json(decoded);
+          response.send(`✅ You've been successfully authenticaded`);
         }
       }
   });
@@ -110,39 +134,43 @@ ROUTER.post('/authenticate', (request, response) => {
 // -------------------------------------------------------
 // EMPLOYEE UPDATE PASSWORD
 // -------------------------------------------------------
-ROUTER.put('/password/:userId', (request, response) => {
-  let userId = request.params.userId;
-  let newPassword = request.body.newPassword;
-  let sqlRequest = new sql.Request();
-  sqlRequest.input('id', userId);
-  sqlRequest.input('new_password', newPassword);
+ROUTER.put('/password/:employeeId', (request, response) => {
+  let userId = request.params.employeeId;
+  let newPassword = request.body.new_password;
 
-  sqlRequest.execute('[usp_staff_update_password]', (err) => {
-    if (err) {
-      response.json({name: err.name, code: err.code, info: err.originalError.info});
-    } else {
-      response.send('✅ Password updated');
-    }
-  });
+  let sqlRequest = new sql.Request();
+
+  sqlRequest.input('id', userId);
+  sqlRequest.input('new_password', encode(newPassword));
+
+  let responseHandler = (err, result) => {
+    sqlResponseHandler(err, result, response, () => {
+      response.send(`✅ Password of employee updated`);
+    });
+  };
+
+  sqlRequest.execute('[usp_staff_update_password]', responseHandler);
 });
 
 // -------------------------------------------------------
 // EMPLOYEE UPDATE ROLE
 // -------------------------------------------------------
-ROUTER.put('/role/:userName', (request, response) => {
-  let userName = request.params.userName;
-  let newRoleId = request.body.newRoleId;
+ROUTER.put('/role/:username', (request, response) => {
+  let username = request.params.username;
+  let data = request.body;
+  
   let sqlRequest = new sql.Request();
-  sqlRequest.input('userName', userName);
-  sqlRequest.input('role_fk', newRoleId);
 
-  sqlRequest.execute('[usp_staff_update_role]', (err) => {
-    if (err) {
-      response.json({name: err.name, code: err.code, info: err.originalError.info});
-    } else {
-      response.send(`✅ ${userName} role updated`);
-    }
-  });
+  sqlRequest.input('username', encode(username));
+  sqlRequest.input('role_fk', data.role_fk);
+
+  let responseHandler = (err, result) => {
+    sqlResponseHandler(err, result, response, () => {
+      response.send(`✅ ${username}'s role updated to ${data.role_fk}`);
+    });
+  };
+
+  sqlRequest.execute('[usp_staff_update_role]', responseHandler);
 });
 
 export default ROUTER;
