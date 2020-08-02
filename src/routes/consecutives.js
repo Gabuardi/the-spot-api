@@ -1,22 +1,36 @@
 import express from 'express';
 import sql from 'mssql';
+import {createDecodedData} from '../utils/common.js';
 import {encode, decode} from '../utils/codification.js';
 import {sqlResponseHandler} from "../utils/handlers.js";
 
 const ROUTER = express.Router();
 
-function createDecodedConsecutiveType (encodedData){
-  let decodedData = [];
-  encodedData.forEach(el => {
-    let data = {
-      consecutiveTypeId: el.consecutive_type_id,
-      description: decode(el.description),
-      consecutiveFk: el.consecutive_fk 
-    };
-    decodedData.push(data);
-  });
-  return decodedData;
+function generateConsecutive(el) {
+  return {
+    consecutiveTypeId: el.consecutive_type_id,
+    description: decode(el.description),
+    consecutiveFk: el.consecutive_fk 
+  }
 };
+
+// -------------------------------------------------------
+// CREATE NEW CONSECUTIVE TYPE
+// -------------------------------------------------------
+ROUTER.post('/types', (request, response) => {
+  let data = request.body;
+  
+  let sqlRequest = new sql.Request();
+
+  sqlRequest.input('description', encode(data.description));
+  sqlRequest.input('consecutive_fk', data.consecutive_fk);
+
+  let responseHandler = (err, result) => {
+    sqlResponseHandler(err, result, response, () => response.send(`✅ CONSECUTIVE TYPE -> ${data.description} has been created`));
+  };
+
+  sqlRequest.execute('[usp_consecutive_types_insert]', responseHandler);
+});
 
 // -------------------------------------------------------
 // GET ALL CONSECUTIVE TYPES
@@ -26,31 +40,30 @@ ROUTER.get('/types', (request, response) => {
   
   let responseHandler = (err, result) => {
     sqlResponseHandler(err, result, response, (response, result) => {
-      let decoded = createDecodedConsecutiveType(result.recordset);
+      let decoded = createDecodedData(result.recordset, generateConsecutive);
       response.json(decoded);
-    })
-  }
+    });
+  };
 
   sqlRequest.execute('[usp_consecutive_types_get_all]', responseHandler);
 });
 
 // -------------------------------------------------------
-// CREATE NEW CONSECUTIVE TYPE
+// CREATE NEW CONSECUTIVE
 // -------------------------------------------------------
-ROUTER.post('/types', (request, response) => {
+ROUTER.post('/', (request, response) => {
   let data = request.body;
+
   let sqlRequest = new sql.Request();
 
-  sqlRequest.input('description', encode(data.description));
-  sqlRequest.input('consecutive_fk', data.consecutive_fk);
+  sqlRequest.input('prefix', data.prefix);
+  sqlRequest.input('max_value', data.max);
 
   let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, () => {
-      response.send(`✅ CONSECUTIVE TYPE -> ${data.description} has been created`)
-    });
+    sqlResponseHandler(err, result, response, () => response.send(`✅ CONSECUTIVE -> ${data.prefix} has been created with a Max Value of ${data.max}`));
   };
 
-  sqlRequest.execute('[usp_consecutive_types_insert]', responseHandler);
+  sqlRequest.execute('[usp_consecutives_insert]', responseHandler);
 });
 
 // -------------------------------------------------------
@@ -60,30 +73,10 @@ ROUTER.get('/', (request, response) => {
   let sqlRequest = new sql.Request();
 
   let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, (response, result) => {
-      response.json(result.recordset);
-    });
+    sqlResponseHandler(err, result, response, (response, result) => response.json(result.recordset));
   };
 
   sqlRequest.execute('[usp_consecutives_get_all]', responseHandler);  
-});
-
-// -------------------------------------------------------
-// CREATE NEW CONSECUTIVE
-// -------------------------------------------------------
-ROUTER.post('/', (request, response) => {
-  let data = request.body;
-  let sqlRequest = new sql.Request();
-  sqlRequest.input('prefix', data.prefix);
-  sqlRequest.input('max_value', data.max);
-
-  let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, () => {
-      response.send(`✅ CONSECUTIVE -> ${data.prefix} has been created with a Max Value of ${data.max}`)
-    });
-  };
-
-  sqlRequest.execute('[usp_consecutives_insert]', responseHandler);
 });
 
 // -------------------------------------------------------
@@ -101,10 +94,9 @@ ROUTER.put('/:consecutiveId', (request, response) => {
   sqlRequest.input('max_value', maxValue);
 
   let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, () => {
-      response.send(`✅ Consecutive updated`);
-    });
+    sqlResponseHandler(err, result, response, () => response.send(`✅ Consecutive updated`));
   };
+  
   sqlRequest.execute('[usp_consecutives_update]', responseHandler);
 });
 

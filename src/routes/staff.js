@@ -7,8 +7,8 @@ import {sqlResponseHandler} from "../utils/handlers.js";
 
 const ROUTER = express.Router();
 
-function generatePublicStaff(el){
-  return{
+function generatePublicStaff(el) {
+  return {
     username: decode(el.username),
     email: decode(el.email_addr),
     securityQuestion: decode(el.security_question),
@@ -19,8 +19,8 @@ function generatePublicStaff(el){
   }
 };
 
-function generatePrivateStaff(el){
-  return{
+function generatePrivateStaff(el) {
+  return {
     mployeeId: el.employee_id,
     username: decode(el.username),
     password: decode(el.password),
@@ -85,9 +85,7 @@ ROUTER.post('/', (request, response) => {
   sqlRequest.input('role_fk', data.role_fk);
 
   let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, () => {
-      response.send(`✅ New management user ${data.username} created`);
-    });
+    sqlResponseHandler(err, result, response, () => response.send(`✅ New management user ${data.username} created`));
   };
 
   sqlRequest.execute('[usp_staff_insert]', responseHandler);
@@ -137,9 +135,7 @@ ROUTER.put('/password/:employeeId', (request, response) => {
   sqlRequest.input('new_password', encode(newPassword));
 
   let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, () => {
-      response.send(`✅ Password of employee updated`);
-    });
+    sqlResponseHandler(err, result, response, () => response.send(`✅ Password of employee updated`));
   };
 
   sqlRequest.execute('[usp_staff_update_password]', responseHandler);
@@ -158,9 +154,7 @@ ROUTER.put('/role/:username', (request, response) => {
   sqlRequest.input('role_fk', data.role_fk);
 
   let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, () => {
-      response.send(`✅ ${username}'s role updated to ${data.role_fk}`);
-    });
+    sqlResponseHandler(err, result, response, () => response.send(`✅ ${username}'s role updated to ${data.role_fk}`));
   };
 
   sqlRequest.execute('[usp_staff_update_role]', responseHandler);

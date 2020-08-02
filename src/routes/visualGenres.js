@@ -1,31 +1,27 @@
 import express from 'express';
 import sql from 'mssql';
+import {createDecodedData} from '../utils/common.js';
 import {encode, decode} from '../utils/codification.js';
 import {sqlResponseHandler} from "../utils/handlers.js";
 
 const ROUTER = express.Router();
 
-function createDecodedData (encodedData){
-  let decodedData = [];
-  encodedData.forEach(el => {
-    let data = {
-      visualGenreId: el.visual_genre_id,
-      title: decode(el.title)
-    };
-    decodedData.push(data);
-  });
-  return decodedData;
+function generateGenre(el) {
+  return {
+    visualGenreId: el.visual_genre_id,
+    title: decode(el.title)
+  }
 };
 
 // -------------------------------------------------------
-// GET ALL ROLES
+// GET ALL VISUAL GENRES
 // -------------------------------------------------------
 ROUTER.get('/', (request, response) => {
   let sqlRequest = new sql.Request();
   
   let responseHandler = (err, result) => {
     sqlResponseHandler(err, result, response, (response, result) => {
-      let decoded = createDecodedData(result.recordset);
+      let decoded = createDecodedData(result.recordset, generateGenre);
       response.json(decoded);
     });
   };
@@ -34,17 +30,17 @@ ROUTER.get('/', (request, response) => {
 });
 
 // -------------------------------------------------------
-// CREATE NEW ROLE
+// CREATE NEW VISUAL GENRE
 // -------------------------------------------------------
 ROUTER.post('/', (request, response) => {
   let data = request.body;
+
   let sqlRequest = new sql.Request();
+
   sqlRequest.input('title', encode(data.title));
   
   let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, () => {
-      response.send(`✅ VISUAL GENRE -> ${data.title} has been added`)
-    });
+    sqlResponseHandler(err, result, response, () => response.send(`✅ VISUAL GENRE -> ${data.title} has been added`));
   };
 
   sqlRequest.execute('[usp_visual_genres_insert]', responseHandler);

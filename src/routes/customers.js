@@ -1,33 +1,30 @@
 import express from 'express';
 import sql from 'mssql';
+import {createDecodedData} from '../utils/common.js';
 import {encode, decode} from "../utils/codification.js";
 import {dateStringParser} from "../utils/parsers.js";
 import {sqlResponseHandler} from "../utils/handlers.js";
 
 const ROUTER = express.Router();
 
-function createDecodedCustomerList (encodedCustomerList) {
-  let decodedCustomerList = [];
-  encodedCustomerList.forEach(element => {
-    let customer = {
-      customerId: element.customer_id,
-      username: decode(element.username),
-      password: decode(element.password),
-      firstName: decode(element.first_name),
-      lastName: decode(element.last_name),
-      email: decode(element.email_addr),
-      created: dateStringParser(element.date_created)
-    };
-    decodedCustomerList.push(customer);
-  });
-  return decodedCustomerList;
-}
+function generateCustomer(el) {
+  return {
+    customerId: el.customer_id,
+    username: decode(el.username),
+    password: decode(el.password),
+    firstName: decode(el.first_name),
+    lastName: decode(el.last_name),
+    email: decode(el.email_addr),
+    created: dateStringParser(el.date_created)
+  }
+};
 
 // -------------------------------------------------------
 // CREATE NEW CUSTOMER
 // -------------------------------------------------------
 ROUTER.post('/', (request, response) => {
   let data = request.body;
+  
   let sqlRequest = new sql.Request();
 
   sqlRequest.input('username', encode(data.username));
@@ -37,8 +34,7 @@ ROUTER.post('/', (request, response) => {
   sqlRequest.input('email_addr', encode(data.email));
 
   let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, 
-      () => response.send(`✅ CUSTOMER -> ${data.username} has been created`));
+    sqlResponseHandler(err, result, response, () => response.send(`✅ CUSTOMER -> ${data.username} has been created`));
   };
   sqlRequest.execute('usp_customers_insert', responseHandler);
 });
@@ -48,9 +44,10 @@ ROUTER.post('/', (request, response) => {
 // -------------------------------------------------------
 ROUTER.get('/', (request, response) => {
   let sqlRequest = new sql.Request();
+
   let responseHandler = (err, result) => {
     sqlResponseHandler(err, result, response, (response, result) => {
-      let decodedCustomerList = createDecodedCustomerList(result.recordset);
+      let decodedCustomerList = createDecodedData(result.recordset, generateCustomer);
       response.json(decodedCustomerList);
     });
   };
