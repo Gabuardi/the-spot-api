@@ -92,6 +92,31 @@ ROUTER.post('/', (request, response) => {
 });
 
 // -------------------------------------------------------
+// EMPLOYEE EXISTS
+// -------------------------------------------------------
+ROUTER.post('/check/:username', (request, response) => {
+  let username = request.params.username;
+
+  let sqlRequest = new sql.Request();
+
+  sqlRequest.input('username', encode(username));
+
+  let responseHandler = (err, result) => {
+    if(err){
+      response.json({name: err.name, code: err.code, info: err.originalError.info});
+    } else {
+      if (result.recordset[0].exists === 'true') {
+        response.send(`❌ This employee "${username}" already exists`);
+      } else if (result.recordset[0].exists === 'false') {
+        response.send(`✅ This employee "${username}" does not exist`);
+      };
+    };
+  };
+
+  sqlRequest.execute('[usp_staff_exists]', responseHandler)
+});
+
+// -------------------------------------------------------
 // AUTHENTICATE
 // -------------------------------------------------------
 ROUTER.post('/authenticate', (request, response) => {
