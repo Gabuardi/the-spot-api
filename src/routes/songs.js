@@ -6,6 +6,13 @@ import {createDecodedData} from '../utils/common.js';
 
 const ROUTER = express.Router();
 
+function generateArtists(artistArray) {
+  let artists = [];
+  artistArray.forEach(el => {
+    artists.push(decode(el.full_name));
+  });
+};
+
 function generateSong(el) {
   return {
     songId: el.song_id,
@@ -14,7 +21,7 @@ function generateSong(el) {
     album: decode(el.album),
     recordLabel: el.record_label_fk,
     genre: el.musical_genre_fk,
-    artists: el.artist
+    artists: generateArtists(el.artists)
   }
 };
 
@@ -33,33 +40,13 @@ ROUTER.get('/', (request, response) => {
 
   let responseHandler = (err, result) => {
     sqlResponseHandler(err, result, response, (response, result) => {
-      let decoded = createDecodedData(result.recordset, generateSong);
+      let decoded = createDecodedData(result.recordset[0], generateSong);
       response.json(decoded);
     });
   };
 
   sqlRequest.execute('[usp_songs_get_all]', responseHandler);
 });
-
-// -------------------------------------------------------
-// GET SPECIFIC MOVIE
-// -------------------------------------------------------
-ROUTER.get('/:songId', (request, response) => {
-    let songId = request.params.songId;
-
-    let sqlRequest = new sql.Request();
-
-    sqlRequest.input('song_id', songId);
-  
-    let responseHandler = (err, result) => {
-      sqlResponseHandler(err, result, response, (response, result) => {
-        let decoded = createDecodedData(result.recordset, generateSong);
-        response.json(decoded);
-      });
-    };
-  
-    sqlRequest.execute('[usp_songs_get_specific]', responseHandler);
-  });
 
 // -------------------------------------------------------
 // GET ALL SONG TITLES
@@ -144,25 +131,6 @@ ROUTER.post('/artists/:songId', (request, response) => {
 
   sqlRequest.execute('[usp_song_artists_insert]', responseHandler);
 });
-
-// -------------------------------------------------------
-// ADD GENRE TO SONG (OPTIONAL)
-// -------------------------------------------------------
-// ROUTER.post('/genre/:songId', (request, response) => {
-//   let songId = request.params.songId;
-//   let genre = request.body.musical_genre_fk;
-
-//   let sqlRequest = new sql.Request();
-
-//   sqlRequest.input('song_fk', songId);
-//   sqlRequest.input('musical_genre_fk', genre);
-
-//   let responseHandler = (err, result) => {
-//     sqlResponseHandler(err, result, response, () => response.send(`✅ Genre succesfully assigned to song`));
-//   };
-
-//   sqlRequest.execute('[usp_song_genres_insert]', responseHandler);
-// });
 
 // -------------------------------------------------------
 // SONG LOG

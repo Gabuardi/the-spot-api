@@ -160,25 +160,4 @@ ROUTER.post('/log/:username', (request, response) => {
   sqlRequest.execute('[usp_activity_logs_book]', responseHandler);
 });
 
-// -------------------------------------------------------
-// GET SPECIFIC BOOK (OPTIONAL)
-// -------------------------------------------------------
-// ROUTER.get('/:bookId', (request, response) => {
-//   let bookId = request.params.bookId;
-
-//   let sqlRequest = new sql.Request();
-
-//   sqlRequest.input('book_id', bookId);
-
-//   let responseHandler = (err, result) => {
-//     sqlResponseHandler(err, result, response, (response, result) => {
-//       // let decoded = createDecodedData(result.recordset[0], generateBook);
-//       // response.json(decoded);
-//       response.json(result.recordset);
-//     });
-//   };
-
-//   sqlRequest.execute('[usp_books_get_specific]', responseHandler);
-// });
-
 export default ROUTER;

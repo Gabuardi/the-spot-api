@@ -6,6 +6,14 @@ import {createDecodedData} from '../utils/common.js';
 
 const ROUTER = express.Router();
 
+function parseCast(castArray) {
+  let cast = [];
+  castArray.forEach(el => {
+    cast.push(decode(el.full_name));
+  });
+  return cast;
+};
+
 function generateMovie(el) {
   return {
     movieId: el.movie_id,
