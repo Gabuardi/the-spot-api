@@ -14,14 +14,22 @@ function parseCast(castArray) {
   return cast;
 };
 
+function parseGenre(genreArray) {
+  let genres = [];
+  genreArray.forEach(el => {
+    genres.push(decode(el.title));
+  });
+  return genres;
+};
+
 function generateMovie(el) {
   return {
     movieId: el.movie_id,
     title: decode(el.title),
     releaseYear: el.release_year,
     languageFk: el.language_fk,
-    cast: el.cast,
-    genres: el.genres
+    cast: parseCast(el.cast),
+    genres: parseGenre(el.genres)
   }
 };
 
@@ -40,7 +48,7 @@ ROUTER.get('/', (request, response) => {
 
   let responseHandler = (err, result) => {
     sqlResponseHandler(err, result, response, (response, result) => {
-      let decoded = createDecodedData(result.recordset, generateMovie);
+      let decoded = createDecodedData(result.recordset[0], generateMovie);
       response.json(decoded);
     });
   };

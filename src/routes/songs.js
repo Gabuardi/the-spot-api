@@ -11,6 +11,7 @@ function generateArtists(artistArray) {
   artistArray.forEach(el => {
     artists.push(decode(el.full_name));
   });
+  return artists;
 };
 
 function generateSong(el) {

@@ -35,7 +35,6 @@ function generateBookTitle(el) {
 
 // -------------------------------------------------------
 // GET ALL BOOKS
-// > Stored Procedure with FOR JSON is not working 
 // -------------------------------------------------------
 ROUTER.get('/', (request, response) => {
   let sqlRequest = new sql.Request();
