@@ -56,7 +56,7 @@ APP.use('/movies', moviesRouter);
 APP.use('/books', booksRouter);
 APP.use('/songs', songsRouter);
 APP.use('/logs', logsRouter);
-APP.use('/customers', customersRouter); booksRouter
+APP.use('/customers', customersRouter);
 
 APP.post('/encrypt', (request, response) => {
   let data = request.body;
