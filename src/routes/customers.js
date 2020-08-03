@@ -20,6 +20,42 @@ function generateCustomer(el) {
 };
 
 // -------------------------------------------------------
+// GET ALL CUSTOMERS
+// -------------------------------------------------------
+ROUTER.get('/', (request, response) => {
+  let sqlRequest = new sql.Request();
+
+  let responseHandler = (err, result) => {
+    sqlResponseHandler(err, result, response, (response, result) => {
+      let decodedCustomerList = createDecodedData(result.recordset, generateCustomer);
+      response.json(decodedCustomerList);
+    });
+  };
+
+  sqlRequest.execute('usp_customers_get_all', responseHandler);
+});
+
+// -------------------------------------------------------
+// GET SPECIFIC CUSTOMER
+// -------------------------------------------------------
+ROUTER.get('/:customerId', (request, response) => {
+  let customerId = request.params.customerId;
+
+  let sqlRequest = new sql.Request();
+
+  sqlRequest.input('customer_id', customerId);
+
+  let responseHandler = (err, result) => {
+    sqlResponseHandler(err, result, response, (response, result) => {
+      let decodedCustomerList = createDecodedData(result.recordset, generateCustomer);
+      response.json(decodedCustomerList);
+    });
+  };
+
+  sqlRequest.execute('usp_customers_get_specific', responseHandler);
+});
+
+// -------------------------------------------------------
 // CREATE NEW CUSTOMER
 // -------------------------------------------------------
 ROUTER.post('/', (request, response) => {
@@ -40,19 +76,28 @@ ROUTER.post('/', (request, response) => {
 });
 
 // -------------------------------------------------------
-// GET ALL CUSTOMERS
+// CUSTOMER EXISTS
 // -------------------------------------------------------
-ROUTER.get('/', (request, response) => {
+ROUTER.post('/check/:username', (request, response) => {
+  let username = request.params.username;
+
   let sqlRequest = new sql.Request();
 
+  sqlRequest.input('username', encode(username));
+
   let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, (response, result) => {
-      let decodedCustomerList = createDecodedData(result.recordset, generateCustomer);
-      response.json(decodedCustomerList);
-    });
+    if(err){
+      response.json({name: err.name, code: err.code, info: err.originalError.info});
+    } else {
+      if (result.recordset[0].exists === 'true') {
+        response.send(`❌ This customer "${username}" already exists`);
+      } else if (result.recordset[0].exists === 'false') {
+        response.send(`✅ This customer "${username}" does not exist`);
+      };
+    };
   };
 
-  sqlRequest.execute('usp_customers_get_all', responseHandler);
+  sqlRequest.execute('[usp_customers_exists]', responseHandler)
 });
 
 export default ROUTER;

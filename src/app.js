@@ -11,7 +11,7 @@ const DB_CONFIG = {
   password: "123Queso",
   server: "ulacit-ma-the-spot.database.windows.net",
   database: "TheSpotMVP",
-  parseJSON: true,
+  parseJSON: true
 };
 
 APP.use(express.json());
@@ -39,6 +39,7 @@ import editorialsRouter from './routes/editorials.js';
 import recordLabelsRouter from './routes/recordLabels.js';
 import moviesRouter from './routes/movies.js';
 import booksRouter from './routes/books.js';
+import songsRouter from './routes/songs.js';
 import logsRouter from './routes/logs.js';
 import customersRouter from './routes/customers.js';
 
@@ -53,6 +54,7 @@ APP.use('/editorials', editorialsRouter);
 APP.use('/recordLabels', recordLabelsRouter)
 APP.use('/movies', moviesRouter);
 APP.use('/books', booksRouter);
+APP.use('/songs', songsRouter);
 APP.use('/logs', logsRouter);
 APP.use('/customers', customersRouter); booksRouter
 

@@ -34,14 +34,35 @@ ROUTER.get('/', (request, response) => {
 // -------------------------------------------------------
 ROUTER.post('/', (request, response) => {
   let data = request.body;
+  
   let sqlRequest = new sql.Request();
+
   sqlRequest.input('full_name', encode(data.fullName));
   
   let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, () => response.send(`✅ Artist -> ${data.full_name} has been added`));
+    sqlResponseHandler(err, result, response, () => response.send(`✅ Artist -> ${data.fullName} has been added`));
   };
 
   sqlRequest.execute('[usp_artists_insert]', responseHandler);
+});
+
+// -------------------------------------------------------
+// UPDATE ARTIST
+// -------------------------------------------------------
+ROUTER.put('/update/:artistId', (request, response) => {
+  let artistId = request.params.artistId;
+  let data = request.body;
+
+  let sqlRequest = new sql.Request();
+
+  sqlRequest.input('id', artistId);
+  sqlRequest.input('full_name', encode(data.full_name));
+
+  let responseHandler = (err, result) => {
+    sqlResponseHandler(err, result, response, () => response.send(`✅ Artist ${data.full_name} has been updated`));
+  };
+
+  sqlRequest.execute('[usp_artists_update]', responseHandler);
 });
 
 export default ROUTER;
