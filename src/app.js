@@ -42,6 +42,7 @@ import booksRouter from './routes/books.js';
 import songsRouter from './routes/songs.js';
 import logsRouter from './routes/logs.js';
 import customersRouter from './routes/customers.js';
+import avatarsRouter from './routes/avatars.js';
 
 APP.use('/roles', rolesRouter);
 APP.use('/staff', staffRouter);
@@ -56,7 +57,10 @@ APP.use('/movies', moviesRouter);
 APP.use('/books', booksRouter);
 APP.use('/songs', songsRouter);
 APP.use('/logs', logsRouter);
-APP.use('/customers', customersRouter); booksRouter
+APP.use('/customers', customersRouter);
+APP.use('/avatar', avatarsRouter);
+
+APP.use(express.static('resources'));
 
 APP.post('/encrypt', (request, response) => {
   let data = request.body;
@@ -64,4 +68,3 @@ APP.post('/encrypt', (request, response) => {
   let encodedString = base64.encode(randomGeneratedString);
   response.json({originalValue: randomGeneratedString, encodedValue: encodedString, encodedLength: encodedString.length});
 });
-
