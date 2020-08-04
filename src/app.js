@@ -58,10 +58,11 @@ APP.use('/songs', songsRouter);
 APP.use('/logs', logsRouter);
 APP.use('/customers', customersRouter);
 
+APP.use('/avatar', express.static('resources/avatars'));
+
 APP.post('/encrypt', (request, response) => {
   let data = request.body;
   let randomGeneratedString = randomString.generate(data.length, data.readeable);
   let encodedString = base64.encode(randomGeneratedString);
   response.json({originalValue: randomGeneratedString, encodedValue: encodedString, encodedLength: encodedString.length});
 });
-
