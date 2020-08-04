@@ -42,7 +42,6 @@ import booksRouter from './routes/books.js';
 import songsRouter from './routes/songs.js';
 import logsRouter from './routes/logs.js';
 import customersRouter from './routes/customers.js';
-import avatarsRouter from './routes/avatars.js';
 
 APP.use('/roles', rolesRouter);
 APP.use('/staff', staffRouter);
