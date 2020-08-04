@@ -79,10 +79,10 @@ ROUTER.post('/', (request, response) => {
 
   sqlRequest.input('username', encode(data.username));
   sqlRequest.input('password', encode(data.password));
-  sqlRequest.input('email_addr', encode(data.email_addr));
-  sqlRequest.input('security_question', encode(data.security_question));
-  sqlRequest.input('security_answer', encode(data.security_answer));
-  sqlRequest.input('role_fk', data.role_fk);
+  sqlRequest.input('email_addr', encode(data.email));
+  sqlRequest.input('security_question', encode(data.securityQuestion));
+  sqlRequest.input('security_answer', encode(data.securityAnswer));
+  sqlRequest.input('role_fk', data.roleFk);
 
   let responseHandler = (err, result) => {
     sqlResponseHandler(err, result, response, () => response.send(`✅ New management user ${data.username} created`));
@@ -152,7 +152,7 @@ ROUTER.post('/authenticate', (request, response) => {
 // -------------------------------------------------------
 ROUTER.put('/password/:employeeId', (request, response) => {
   let userId = request.params.employeeId;
-  let newPassword = request.body.new_password;
+  let newPassword = request.body.newPassword;
 
   let sqlRequest = new sql.Request();
 
@@ -176,7 +176,7 @@ ROUTER.put('/role/:username', (request, response) => {
   let sqlRequest = new sql.Request();
 
   sqlRequest.input('username', encode(username));
-  sqlRequest.input('role_fk', data.role_fk);
+  sqlRequest.input('role_fk', data.roleFk);
 
   let responseHandler = (err, result) => {
     sqlResponseHandler(err, result, response, () => response.send(`✅ ${username}'s role updated to ${data.role_fk}`));
@@ -195,10 +195,10 @@ ROUTER.put('/avatar/:employeeId', (request, response) => {
   let sqlRequest = new sql.Request();
 
   sqlRequest.input('id', employeeId);
-  sqlRequest.input('new_avatar', data.new_avatar);
+  sqlRequest.input('new_avatar', data.newAvatar);
 
   let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, () => response.send(`✅ ${employeeId}'s avatar changed`));
+    sqlResponseHandler(err, result, response, () => response.send(`✅ Employee id:${employeeId} avatar changed`));
   };
 
   sqlRequest.execute('[usp_staff_update_avatar]', responseHandler);
