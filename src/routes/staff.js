@@ -15,7 +15,7 @@ function generatePublicStaff(el) {
     securityAnswer: decode(el.security_answer),
     roleFk: el.role_fk,
     created: dateStringParser(el.date_created),
-    profilePic: el.profile_pic
+    avatar: el.avatar
   }
 };
 
@@ -29,7 +29,7 @@ function generatePrivateStaff(el) {
     securityAnswer: decode(el.security_answer),
     roleFk: el.role_fk,
     created: dateStringParser(el.date_created),
-    profilePic: el.profile_pic
+    avatar: el.avatar
   }
 };
 
@@ -183,6 +183,42 @@ ROUTER.put('/role/:username', (request, response) => {
   };
 
   sqlRequest.execute('[usp_staff_update_role]', responseHandler);
+});
+
+// -------------------------------------------------------
+// UPDATE EMPLOYEE AVATAR
+// -------------------------------------------------------
+ROUTER.put('/avatar/:employeeId', (request, response) => {
+  let employeeId = request.params.employeeId;
+  let data = request.body;
+  
+  let sqlRequest = new sql.Request();
+
+  sqlRequest.input('id', employeeId);
+  sqlRequest.input('new_avatar', data.new_avatar);
+
+  let responseHandler = (err, result) => {
+    sqlResponseHandler(err, result, response, () => response.send(`✅ ${employeeId}'s avatar changed`));
+  };
+
+  sqlRequest.execute('[usp_staff_update_avatar]', responseHandler);
+});
+
+// -------------------------------------------------------
+// REMOVE EMPLOYEE
+// -------------------------------------------------------
+ROUTER.post('/remove/:employeeId', (request, response) => {
+  let employeeId = request.params.employeeId;
+
+  let sqlRequest = new sql.Request();
+
+  sqlRequest.input('id', employeeId);
+
+  let responseHandler = (err, result) => {
+    sqlResponseHandler(err, result, response, () => response.send(`✅ Employee with id: ${employeeId} has been removed`));
+  };
+
+  sqlRequest.execute('[usp_staff_remove]', responseHandler);
 });
 
 export default ROUTER;
