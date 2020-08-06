@@ -61,10 +61,10 @@ ROUTER.get('/:username', (request, response) => {
 
   let responseHandler = (err, result) => {
     sqlResponseHandler(err, result, response, (err, result) => {
-      let decoded = createDecodedData(result.recordset, generatePrivateStaff)
+      let decoded = createDecodedData(result.recordset, generatePrivateStaff);
       response.json(decoded);
     })
-  }
+  };
 
   sqlRequest.execute('[usp_staff_get_specific]', responseHandler);
 });
@@ -135,12 +135,9 @@ ROUTER.post('/authenticate', (request, response) => {
     } else {
         if (result.recordset.length === 0) {
           response.status(404).send(`❌ Management user ${username} not found`);
-        } else if (decode(result.recordset[0].password) !== password) {
-          response.status(401).send(`❌ Wrong password for ${username}`);
         } else {
-          // let decoded = createDecodedData(result.recordset, 'specific')
-          // response.json(decoded);
-          response.send(`✅ You've been successfully authenticaded`);
+          let decoded = createDecodedData(result.recordset, generatePrivateStaff);
+          response.json(decoded[0]);
         }
       }
   });
@@ -172,7 +169,7 @@ ROUTER.put('/password/:employeeId', (request, response) => {
 ROUTER.put('/role/:username', (request, response) => {
   let username = request.params.username;
   let data = request.body;
-  
+
   let sqlRequest = new sql.Request();
 
   sqlRequest.input('username', encode(username));
@@ -191,7 +188,7 @@ ROUTER.put('/role/:username', (request, response) => {
 ROUTER.put('/avatar/:employeeId', (request, response) => {
   let employeeId = request.params.employeeId;
   let data = request.body;
-  
+
   let sqlRequest = new sql.Request();
 
   sqlRequest.input('id', employeeId);

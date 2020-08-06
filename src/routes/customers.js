@@ -17,7 +17,7 @@ function generateCustomer(el) {
     email: decode(el.email_addr),
     created: dateStringParser(el.date_created)
   }
-};
+}
 
 // -------------------------------------------------------
 // GET ALL CUSTOMERS
@@ -60,7 +60,7 @@ ROUTER.get('/:customerId', (request, response) => {
 // -------------------------------------------------------
 ROUTER.post('/', (request, response) => {
   let data = request.body;
-  
+
   let sqlRequest = new sql.Request();
 
   sqlRequest.input('username', encode(data.username));
@@ -98,6 +98,33 @@ ROUTER.post('/check/:username', (request, response) => {
   };
 
   sqlRequest.execute('[usp_customers_exists]', responseHandler)
+});
+
+// -------------------------------------------------------
+// AUTHENTICATE
+// -------------------------------------------------------
+ROUTER.post('/authenticate', (request, response) => {
+  let body = request.body;
+  let username = body.username;
+  let password = body.password;
+
+  let sqlRequest = new sql.Request();
+
+  sqlRequest.input('username', encode(username));
+  sqlRequest.input('password', encode(password));
+
+  sqlRequest.execute('[usp_customers_validate]', (err, result) => {
+    if (err) {
+      response.json({name: err.name, code: err.code, info: err.originalError.info});
+    } else {
+      if (result.recordset.length === 0) {
+        response.status(404).send(`❌ Customer user ${username} not found`);
+      } else {
+        let decoded = createDecodedData(result.recordset, generateCustomer);
+        response.json(decoded[0]);
+      }
+    }
+  });
 });
 
 export default ROUTER;
