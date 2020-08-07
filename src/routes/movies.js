@@ -12,7 +12,7 @@ function parseCast(castArray) {
     cast.push(decode(el.full_name));
   });
   return cast;
-};
+}
 
 function parseGenre(genreArray) {
   let genres = [];
@@ -20,7 +20,7 @@ function parseGenre(genreArray) {
     genres.push(decode(el.title));
   });
   return genres;
-};
+}
 
 function generateMovie(el) {
   return {
@@ -31,46 +31,14 @@ function generateMovie(el) {
     cast: parseCast(el.cast),
     genres: parseGenre(el.genres)
   }
-};
+}
 
 function generateMovieTitles(el) {
   return {
     movieId: el.movie_id,
     title: encode(el.title)
   }
-};
-
-// -------------------------------------------------------
-// GET ALL MOVIES
-// -------------------------------------------------------
-ROUTER.get('/', (request, response) => {
-  let sqlRequest = new sql.Request();
-
-  let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, (response, result) => {
-      let decoded = createDecodedData(result.recordset[0], generateMovie);
-      response.json(decoded);
-    });
-  };
-
-  sqlRequest.execute('[usp_movies_get_all]', responseHandler);
-});
-
-// -------------------------------------------------------
-// GET ALL MOVIE TITLES
-// -------------------------------------------------------
-ROUTER.get('/titles', (request, response) => {
-  let sqlRequest = new sql.Request();
-
-  let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, (response, result) => {
-      let decoded = createDecodedData(result.recordset, generateMovieTitles);
-      response.json(decoded);
-    });
-  };
-
-  sqlRequest.execute('[usp_movies_get_titles]', responseHandler);
-});
+}
 
 // -------------------------------------------------------
 // ADD NEW MOVIE
@@ -92,30 +60,14 @@ ROUTER.post('/', (request, response) => {
 });
 
 // -------------------------------------------------------
-// UPDATE MOVIE
+// UPLOAD MOVIE FILE
 // -------------------------------------------------------
-ROUTER.put('/:movieId', (request, response) => {
+ROUTER.post('/upload/media/:movieId', (request, response) => {
+  let movieFile = request.files.file;
   let movieId = request.params.movieId;
-  let data = request.body;
-
-  let sqlRequest = new sql.Request();
-
-  sqlRequest.input('movie_id', movieId);
-  sqlRequest.input('title', encode(data.title));
-  sqlRequest.input('release_year', data.release_year);
-  sqlRequest.input('language_fk', data.language_fk);
-
-  let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, () => response.send(`✅ MOVIE -> ${data.title} has been updated`));
-  };
-
-  sqlRequest.execute('[usp_movies_update]', responseHandler);
+  movieFile.mv(`././resources/movies/media/${movieId}.mp4`);
+  response.send('Movie created');
 });
-
-// -------------------------------------------------------
-// REMOVE BOOK
-// -------------------------------------------------------
-// TO BE MADE
 
 // -------------------------------------------------------
 // ADD CAST TO MOVIE
@@ -153,6 +105,59 @@ ROUTER.post('/genre/:movieId', (request, response) => {
   };
 
   sqlRequest.execute('[usp_movie_genres_insert]', responseHandler);
+});
+
+// -------------------------------------------------------
+// GET ALL MOVIES
+// -------------------------------------------------------
+ROUTER.get('/', (request, response) => {
+  let sqlRequest = new sql.Request();
+
+  let responseHandler = (err, result) => {
+    sqlResponseHandler(err, result, response, (response, result) => {
+      let decoded = createDecodedData(result.recordset[0], generateMovie);
+      response.json(decoded);
+    });
+  };
+
+  sqlRequest.execute('[usp_movies_get_all]', responseHandler);
+});
+
+// -------------------------------------------------------
+// GET ALL MOVIE TITLES
+// -------------------------------------------------------
+ROUTER.get('/titles', (request, response) => {
+  let sqlRequest = new sql.Request();
+
+  let responseHandler = (err, result) => {
+    sqlResponseHandler(err, result, response, (response, result) => {
+      let decoded = createDecodedData(result.recordset, generateMovieTitles);
+      response.json(decoded);
+    });
+  };
+
+  sqlRequest.execute('[usp_movies_get_titles]', responseHandler);
+});
+
+// -------------------------------------------------------
+// UPDATE MOVIE
+// -------------------------------------------------------
+ROUTER.put('/:movieId', (request, response) => {
+  let movieId = request.params.movieId;
+  let data = request.body;
+
+  let sqlRequest = new sql.Request();
+
+  sqlRequest.input('movie_id', movieId);
+  sqlRequest.input('title', encode(data.title));
+  sqlRequest.input('release_year', data.release_year);
+  sqlRequest.input('language_fk', data.language_fk);
+
+  let responseHandler = (err, result) => {
+    sqlResponseHandler(err, result, response, () => response.send(`✅ MOVIE -> ${data.title} has been updated`));
+  };
+
+  sqlRequest.execute('[usp_movies_update]', responseHandler);
 });
 
 // -------------------------------------------------------

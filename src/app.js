@@ -2,6 +2,7 @@ import express from 'express';
 import sql from 'mssql';
 import base64 from 'base-64';
 import randomString from 'randomstring';
+import fileUpload from 'express-fileupload';
 
 const APP = express();
 const PORT = process.env.PORT || 3000;
@@ -15,6 +16,7 @@ const DB_CONFIG = {
 };
 
 APP.use(express.json());
+APP.use(fileUpload({createParentPath: true}));
 
 sql.connect(DB_CONFIG, error => {
   if (error) {
@@ -51,7 +53,7 @@ APP.use('/artists', artistsRouter);
 APP.use('/visualGenres', visualGenresRouter);
 APP.use('/musicalGenres', musicalGenresRouter);
 APP.use('/editorials', editorialsRouter);
-APP.use('/recordLabels', recordLabelsRouter)
+APP.use('/recordLabels', recordLabelsRouter);
 APP.use('/movies', moviesRouter);
 APP.use('/books', booksRouter);
 APP.use('/songs', songsRouter);
