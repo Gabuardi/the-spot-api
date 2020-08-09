@@ -6,20 +6,20 @@ const __dirname = path.resolve();
 const ROUTER = express.Router();
 
 // -------------------------------------------------------
-// HOME PAGE
+// STAFF LIST
 // -------------------------------------------------------
 ROUTER.get('/', async (request, res) => {
-  let homeOutput = await readTemplate(`${__dirname}/views/management/home/index.html`, 'utf-8');
+  let homeOutput = await readTemplate(`${__dirname}/views/management/staff/users-list/index.html`, 'utf-8');
   res.status(200).type('text/html').send(homeOutput);
 });
 
 // -------------------------------------------------------
-// MANAGEMENT INDEX
+// CREATE NEW
 // -------------------------------------------------------
-import managementMoviesRouter from './movies.js';
-import managementStaffRouter from './staff.js';
+ROUTER.get('/new', async (request, res) => {
+  let homeOutput = await readTemplate(`${__dirname}/views/management/staff/create-user/index.html`, 'utf-8');
+  res.status(200).type('text/html').send(homeOutput);
+});
 
-ROUTER.use('/movies', managementMoviesRouter);
-ROUTER.use('/staff', managementStaffRouter);
 
 export default ROUTER;
