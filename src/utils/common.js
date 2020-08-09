@@ -20,29 +20,33 @@ function readTemplate(file, type) {
   });
 }
 
-function filteredData(data, queryParams) {
+function filteredData (data, queryParams) {
   return data.filter((movie) => {
-    return Object.keys(queryParams).every((key) => {
-      if (typeof (movie[key]) == 'object') {
-        movie[key].forEach(v => {
-          return v == queryParams[key];
-        })
-      } else {
-        return movie[key] == queryParams[key];
+    return Object.keys(queryParams).every((paramKey) => {
+      if(typeof (movie[paramKey]) == 'object') {
+        return movie[paramKey].some(movieKey => {
+          if(typeof queryParams[paramKey] == 'object'){
+            return (queryParams[paramKey].includes(movieKey));
+          }else {
+            return movieKey == queryParams[paramKey];
+          }
+        });
+      }else {
+        return movie[paramKey] == queryParams[paramKey];
       }
     })
   })
-};
+}
 
-function ifDuplicate(array) {
+function ifDuplicate (array) {
   let tempArray = [];
   array.forEach(el => {
-    if (!tempArray.includes(el)) tempArray.push(el);
+    if(!tempArray.includes(el))tempArray.push(el);
   });
   return tempArray;
-};
+}
 
-function filterArrayValues(data, type) {
+function filterArrayValues (data, type) {
   let values = [];
   data.forEach(el => {
     Object.keys(el).forEach(k => {
@@ -50,18 +54,17 @@ function filterArrayValues(data, type) {
         el[k].forEach(p => {
           values.push(p);
         });
-      }
-      ;
+      };
     });
   });
-  return (ifDuplicate(values));
+  return(ifDuplicate(values));
 }
 
-function generateFilterOptions(data, type) {
+function generateFilterOptions (data, type){
   let values = [];
   data.forEach(el => {
     Object.keys(el).forEach(k => {
-      if (k == type) values.push(el[k]);
+      if(k == type)values.push(el[k]);
     });
   });
   return ifDuplicate(values);
