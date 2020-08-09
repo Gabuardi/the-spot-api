@@ -66,7 +66,7 @@ function generateMovieTitles(el) {
 ROUTER.post('/', (request, response) => {
   let dataBody = request.body;
   let movieFile = request.files.movieFile;
-  let coverFile = request.files.coverFile;
+  let artwork = request.files.artworkFile;
   let sqlRequest = new sql.Request();
 
   let responseHandler = (err, result) => {
@@ -74,7 +74,7 @@ ROUTER.post('/', (request, response) => {
       let movieId = result.recordset[0]['movie_id'];
       insertActorsInMovieSP(movieId, dataBody.cast);
       insertGenresInMovie(movieId, dataBody.genres);
-      coverFile.mv(`././resources/movies/artworks/${movieId}.jpg`);
+      artwork.mv(`././resources/movies/artworks/${movieId}.jpg`);
       movieFile.mv(`././resources/movies/media/${movieId}.mp4`);
       response.send(movieId);
     });
@@ -89,11 +89,10 @@ ROUTER.post('/', (request, response) => {
 // -------------------------------------------------------
 // UPLOAD MOVIE FILE
 // -------------------------------------------------------
-ROUTER.post('/upload/media/:movieId', (request, response) => {
-  let movieFile = request.files.file;
-  let movieId = request.params.movieId;
-  movieFile.mv(`././resources/movies/media/${movieId}.mp4`);
-  response.send('Movie created');
+ROUTER.post('/upload/temp/artwork', (request, response) => {
+  let artworkFile = request.files.artworkFile;
+  artworkFile.mv(`././resources/movies/artworks/temp.jpg`);
+  response.sendStatus(200);
 });
 
 // -------------------------------------------------------
