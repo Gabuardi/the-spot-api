@@ -6,23 +6,23 @@ import {createDecodedData} from '../utils/common.js';
 
 const ROUTER = express.Router();
 
-function insertActorsInMovieSP(movie, artist) {
-  let artistArray = typeof (artist) ? 'object' : [artist];
-  let sqlRequest = new sql.Request();
+function insertActorsInMovieSP(movie, artists) {
+  let artistArray = typeof(artists) === 'object' ? artists : [artists];
   artistArray.forEach((artist) => {
+    let sqlRequest = new sql.Request();
     sqlRequest.input('movie_fk', movie);
     sqlRequest.input('artist_fk', artist);
-    sqlRequest.execute('usp.movies_cast_insert');
+    sqlRequest.execute('usp_movies_cast_insert');
   })
 }
 
 function insertGenresInMovie(movie, genres) {
-  let genresArray = typeof (genres) ? 'object' : [genres];
-  let sqlRequest = new sql.Request();
+  let genresArray = typeof(genres) === 'object' ? genres : [genres];
   genresArray.forEach((genre) => {
+    let sqlRequest = new sql.Request();
     sqlRequest.input('movie_fk', movie);
     sqlRequest.input('visual_genre_fk', genre);
-    sqlRequest.execute('usp.movies_genres_insert');
+    sqlRequest.execute('usp_movie_genres_insert');
   });
 }
 
@@ -65,12 +65,18 @@ function generateMovieTitles(el) {
 // -------------------------------------------------------
 ROUTER.post('/', (request, response) => {
   let dataBody = request.body;
-  let dataFiles = request.files;
+  let movieFile = request.files.movieFile;
+  let coverFile = request.files.coverFile;
   let sqlRequest = new sql.Request();
 
   let responseHandler = (err, result) => {
     sqlResponseHandler(err, result, response, (response, result) => {
-      response.send(result);
+      let movieId = result.recordset[0]['movie_id'];
+      insertActorsInMovieSP(movieId, dataBody.cast);
+      insertGenresInMovie(movieId, dataBody.genres);
+      coverFile.mv(`././resources/movies/artworks/${movieId}.jpg`);
+      movieFile.mv(`././resources/movies/media/${movieId}.mp4`);
+      response.send(movieId);
     });
   };
 
