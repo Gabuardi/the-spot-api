@@ -62,7 +62,7 @@ APP.use('/editorials', editorialsRouter);
 APP.use('/recordLabels', recordLabelsRouter);
 APP.use('/movies', moviesRouter);
 APP.use('/books', booksRouter);
-APP.use('/songs', songsRouter);
+APP.use('/music', songsRouter);
 APP.use('/logs', logsRouter);
 APP.use('/customers', customersRouter);
 

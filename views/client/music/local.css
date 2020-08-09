@@ -1,0 +1,87 @@
+/* ----------------------- */
+/* SIDEBAR */
+ 
+.sidebar {
+    z-index: 1;
+    position: fixed;
+    width: 400px;
+    right: -400px;
+    height: 100%;
+    background-color: var(--alternative-dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 0;
+    transition: right 0.7s ease-in-out;
+  }
+  
+  .sidebar.active {
+    right: 0;
+  }
+  
+  .sidebar img {
+    width: 250px;
+  }
+  
+  .sidebar-info {
+    width: 80%;
+    color: #FFF;
+    font-size: 20px;
+    margin-top: 30px;
+  }
+  
+  .sidebar-info div {
+    padding: 10px;
+    border-top: 1px solid #626262;
+  }
+  
+  .sidebar-info strong {
+    font-weight: 500;
+    color: var(--primary-color);
+    font-size: 20px;
+  }
+  
+  .sidebar button {
+    margin-bottom: 30px;
+    position: absolute;
+    bottom: 0;
+  }
+  
+  /* ----------------------- */
+  /* CATALOG */
+  
+  .catalog {
+    height: calc(100vh - 215px);
+    overflow: scroll;
+    background-color: var(--alternative-dark);
+  }
+  
+  .resource-card {
+    padding: 10px;
+    background-color: var(--primary-color);
+    margin: 15px;
+    cursor: pointer;
+    width: 15.4rem;
+    height: 30rem;
+  }
+  
+  .resource-card img {
+    width: 227px;
+  }
+  
+  .resource-card__title {
+    color: #FFF;
+    font-weight: 500;
+    margin-top: 10px;
+    margin-bottom: 2px;
+  }
+  
+  .sidebar-dropdown {
+    display: none;
+    z-index: 1;
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+  }
+  

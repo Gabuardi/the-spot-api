@@ -1,12 +1,16 @@
 import express from 'express';
+import path from 'path';
+import fs from 'fs';
 import sql from 'mssql';
-import {sqlResponseHandler} from '../utils/handlers.js';
 import {encode, decode} from '../utils/codification.js';
-import {createDecodedData} from '../utils/common.js';
+import {sqlResponseHandler} from "../utils/handlers.js";
+import {createDecodedData, readTemplate, filteredData, filterArrayValues, generateFilterOptions} from '../utils/common.js';
+
+const __dirname = path.resolve();
 
 const ROUTER = express.Router();
 
-function generateArtists(artistArray) {
+function parseArtists(artistArray) {
   let artists = [];
   artistArray.forEach(el => {
     artists.push(decode(el.full_name));
@@ -20,9 +24,9 @@ function generateSong(el) {
     title: decode(el.title),
     releaseYear: el.release_year,
     album: decode(el.album),
-    recordLabel: el.record_label_fk,
-    genre: el.musical_genre_fk,
-    artists: generateArtists(el.artists)
+    recordLabel: decode(el.record_label),
+    genres: decode(el.genres),
+    artists: parseArtists(el.artists)
   }
 };
 
@@ -33,10 +37,89 @@ function generateSongTitles(el) {
   }
 };
 
+function replaceTemplate(html, data){
+  let output = html.replace(/%{SONGID}%/g, data.songId);
+  output = output.replace(/{%IMAGE%}/g, data.songId);
+  output = output.replace(/{%TITLE%}/g, data.title);
+  output = output.replace(/{%ARTIST%}/g, data.artists);
+  output = output.replace(/{%GENRE%}/g, data.genres);
+  output = output.replace(/{%ALBUM%}/g, data.album);
+  output = output.replace(/{%RECORD-LABEL%}/g, data.recordLabel);
+  output = output.replace(/{%YEAR%}/g, data.releaseYear);
+  
+  return output;
+};
+
+// -------------------------------------------------------
+// MUSIC HOME PAGE
+// -------------------------------------------------------
+ROUTER.get('/', async (req, res) => {
+  try {
+    let queryObj = {...req.query};
+
+    let sqlRequest = new sql.Request();
+
+    let homeOutput = await readTemplate(`${__dirname}/views/client/music/index.html`, 'utf-8');
+    let sidebarOutput = await readTemplate(`${__dirname}/views/client/music/templates/sidebar-song.html`, 'utf-8');
+    let cardOutput = await readTemplate(`${__dirname}/views/client/music/templates/card-song.html`, 'utf-8');
+    let artistsOutput = '<option>{%ARTIST%}</option>';
+    let genresOutput = '<option>{%GENRE%}</option>';
+    let albumsOutput = '<option>{%ALBUM%}</option>';
+    let yearsOutput = '<option>{%YEAR%}</option>';
+    let recordLabelsOutput = '<option>{%RECORD-LABEL%}</option>';
+
+    sqlRequest.execute('[usp_songs_get_all]', async (err, data) => {
+      if(err) console.log(`ERROR!!! ${err}`);
+
+      let songData = await createDecodedData(data.recordset[0], generateSong);
+
+      let finalData = filteredData(songData, queryObj);
+
+      sidebarOutput = await finalData.map(el => replaceTemplate(sidebarOutput, el)).join('');
+      homeOutput = await homeOutput.replace('{%SIDEBAR_MUSIC%}', sidebarOutput);
+
+      let artists = await filterArrayValues(finalData, 'artists');
+      artistsOutput = await artists.map(el => artistsOutput.replace(/{%ARTIST%}/g, el)).join('');
+      homeOutput = await homeOutput.replace('{%ARTISTS_OPTION%}', artistsOutput);
+
+      let genres = await generateFilterOptions(finalData, 'genres');
+      genresOutput = await genres.map(el => genresOutput.replace(/{%GENRE%}/g, el)).join('');
+      homeOutput = await homeOutput.replace('{%GENRES_OPTION%}', genresOutput);
+
+      let album = await generateFilterOptions(finalData, 'album');
+      albumsOutput = await album.map(el => albumsOutput.replace(/{%ALBUM%}/g, el)).join('');
+      homeOutput = await homeOutput.replace('{%ALBUMS_OPTION%}', albumsOutput);
+
+      let year = await generateFilterOptions(finalData, 'releaseYear');
+      yearsOutput = await year.map(el => yearsOutput.replace(/{%YEAR%}/g, el)).join('');
+      homeOutput = await homeOutput.replace('{%YEARS_OPTION%}', yearsOutput);
+
+      let recordLabel = await generateFilterOptions(finalData, 'recordLabel');
+      recordLabelsOutput = await recordLabel.map(el => recordLabelsOutput.replace(/{%RECORD-LABEL%}/g, el)).join('');
+      homeOutput = await homeOutput.replace('{%RECORD_LABEL_OPTION%}', recordLabelsOutput);
+
+      cardOutput = await finalData.map(el => replaceTemplate(cardOutput, el)).join('');
+      homeOutput = await homeOutput.replace('{%MUSIC_CARD%}', cardOutput);
+
+      res
+        .status(200)
+        .type('text/html')
+        .send(homeOutput);
+    });
+  } catch(err) {
+    res
+      .status(400)
+      .json({
+        status: 'failed',
+        message: `ERROR!!! ${err}`
+      });
+  };
+});
+
 // -------------------------------------------------------
 // GET ALL SONGS
 // -------------------------------------------------------
-ROUTER.get('/', (request, response) => {
+ROUTER.get('/all', (request, response) => {
   let sqlRequest = new sql.Request();
 
   let responseHandler = (err, result) => {
