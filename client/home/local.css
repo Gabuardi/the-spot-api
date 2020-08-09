@@ -1,0 +1,54 @@
+body {
+  background-image: url("./img/pngguru.com.png");
+  background-size: 650px;
+
+}
+
+.spt-header {
+  width: 100%;
+  height: 450px;
+  padding: 30px 70px;
+  background-color: var(--primary-color);
+}
+
+.spt-header img {
+  width: 659px;
+}
+
+.spt-header h1,
+.spt-header h2 {
+  text-transform: uppercase;
+}
+
+
+.spt-header h1 {
+  color: #FFF;
+  font-size: 55px;
+}
+
+.spt-header h2 {
+  font-weight: 500;
+  color: var(--dark-base);
+}
+
+.catalog-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid var(--alternative-dark);
+  padding: 20px;
+  width: 300px;
+  background-color: var(--alternative-dark);
+  transition: border-color 0.3s;
+}
+
+.catalog-card:hover {
+  border-color: var(--primary-color);;
+}
+
+.catalog-card svg {
+  font-size: 100px;
+  color: #FFF;
+  margin-bottom: 20px;
+}

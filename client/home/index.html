@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Spot - Management</title>
+
+  <!-- external resources -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/solid.js" integrity="sha384-4RG3cEPIlCBy6VNzxM9ZoEwZW+65ed5JDOfaJAnQqwV6ha/jZDJTXjFmvjFM4bk4" crossorigin="anonymous"></script>
+  <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/fontawesome.js" integrity="sha384-DNo9bmYZCHLtp0n0l0XA2UsoRHX1nx38aRP+p9yoP5A8kVTfeWG3aySMOq5FD/v3" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="../../shared/css/global.css">
+  <link rel="stylesheet" href="local.css">
+</head>
+<body>
+
+
+<!-- ---------------------------- -->
+<!-- NAVBAR -->
+<!-- ---------------------------- -->
+<nav class="container-fluid px-5 d-flex align-items-center justify-content-between">
+  <div class="the-spot-logo color-test"><img src="../../shared/images/play-logo.svg" alt="">THE SPOT</div>
+  <div class="nav-links">
+    <a href="">MOVIES</a>
+    <a href="">MUSIC</a>
+    <a href="" class="mr-5">BOOKS</a>
+    <button class="spt-button" id="open-login-btn">LOGIN</button>
+  </div>
+</nav>
+<!-- ---------------------------- -->
+
+
+<div class="spt-header d-flex justify-content-between align-items-center">
+  <img src="img/header.svg" alt="">
+  <div class="text-right">
+    <h1>Explore and Enjoy</h1>
+    <h2>Download a movie, a song or a book!</h2>
+  </div>
+</div>
+
+<div class="container mt-5 py-5 d-flex justify-content-around">
+  <div class="catalog-card">
+    <i class="fas fa-film"></i>
+    <button class="spt-button w-100">MOVIES</button>
+  </div>
+  <div class="catalog-card">
+    <i class="fas fa-music"></i>
+    <button class="spt-button w-100">MUSIC</button>
+  </div>
+  <div class="catalog-card">
+    <i class="fas fa-book"></i>
+    <button class="spt-button w-100">BOOKS</button>
+  </div>
+</div>
+
+
+<!-- -------------------------------------------------------------------- -->
+<!-- LOG IN / SIGN IN MODAL -->
+<!-- -------------------------------------------------------------------- -->
+<div id="login-modal" class="login-modal modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header d-flex align-items-center">
+        <h5 id="login-option" class="mr-4 active">LOG IN</h5>
+        <h5 id="signin-option">CREATE ACCOUNT</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!---------<< LOG IN >>-------->
+        <form id="login-form">
+          <div class="spt-input">
+            <label>USERNAME</label>
+            <input name="username" type="text" placeholder="Enter your username" aria-label="username">
+          </div>
+          <div class="spt-input mt-2">
+            <label>PASSWORD</label>
+            <input name="password" type="password" placeholder="Enter your password" aria-label="password">
+          </div>
+          <label id="user-type-switch" class="spt-switch mt-3">
+            <input name="isStaff" type="checkbox" aria-label="staff login">
+            <span class="slider round"></span>
+            <label class="disabled-lb">CUSTOMER</label>
+            <label class="enabled-lb">STAFF</label>
+          </label>
+          <div class="mt-5 d-flex justify-content-center">
+            <button type="submit" class="spt-button w-100">LOG IN</button>
+          </div>
+          <p id="login-error" class="custom-error text-center mt-2 mb-0 d-none">Staff user not found or wrong password</p>
+        </form>
+        <!---------<< CREATE ACCOUNT >>-------->
+        <form id="signin-form" class="row d-none">
+          <div class="spt-input col-6">
+            <label>FIRST NAME</label>
+            <input type="text" placeholder="Enter your first name" aria-label="fist name">
+          </div>
+          <div class="spt-input col-6">
+            <label>LAST NAME</label>
+            <input type="text" placeholder="Enter your last name(s)" aria-label="last name">
+          </div>
+          <div class="spt-input mt-2 col-6">
+            <label>USERNAME</label>
+            <input type="text" placeholder="Choose an username" aria-label="username">
+          </div>
+          <div class="spt-input mt-2 col-6">
+            <label>PASSWORD</label>
+            <input type="password" placeholder="Create a password" aria-label="password">
+          </div>
+          <div class="spt-input mt-2 col-12">
+            <label>EMAIL ADDRESS</label>
+            <input type="text" placeholder="Enter an email address" aria-label="email">
+          </div>
+          <div class="mt-5 col-12">
+            <button class="spt-button w-100">SIGN IN</button>
+          </div>
+        </form>
+        <!---------------------------------->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- scripts -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.2/dist/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+<script src="../../shared/js/global.js"></script>
+</body>
+</html>

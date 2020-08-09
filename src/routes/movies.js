@@ -1,8 +1,12 @@
 import express from 'express';
+import path from 'path';
+import fs from 'fs';
 import sql from 'mssql';
 import {sqlResponseHandler} from '../utils/handlers.js';
 import {encode, decode} from '../utils/codification.js';
-import {createDecodedData} from '../utils/common.js';
+import {createDecodedData, filteredData, filterArrayValues, generateFilterOptions} from '../utils/common.js';
+
+const __dirname = path.resolve();
 
 const ROUTER = express.Router();
 
@@ -47,7 +51,7 @@ function generateMovie(el) {
     movieId: el.movie_id,
     title: decode(el.title),
     releaseYear: el.release_year,
-    languageFk: el.language_fk,
+    language: decode(el.language),
     cast: parseCast(el.cast),
     genres: parseGenre(el.genres)
   }
@@ -59,6 +63,26 @@ function generateMovieTitles(el) {
     title: encode(el.title)
   }
 }
+
+const readTemplate = (file, type) => {
+  return new Promise((resolve, reject) => {
+      fs.readFile(file, type, (err, data) => {
+          if(err) reject('File Not Found!')
+          resolve(data);
+      });
+  });
+};
+
+function replaceTemplate(html, data){
+  let output = html.replace(/{%TITLE%}/g, data.title);
+  output = output.replace(/{%YEAR%}/g, data.releaseYear);
+  output = output.replace(/{%LANGUAGE%}/g, data.language);
+  output = output.replace(/{%GENRE%}/g, data.genres);
+  output = output.replace(/{%CAST%}/g, data.cast);
+  output = output.replace(/{%IMAGE%}/g, data.movieId);
+
+  return output;
+};
 
 // -------------------------------------------------------
 // ADD NEW MOVIE
@@ -147,6 +171,67 @@ ROUTER.get('/', (request, response) => {
   };
 
   sqlRequest.execute('[usp_movies_get_all]', responseHandler);
+});
+
+// -------------------------------------------------------
+// GET HOME MOVIE VIEW
+// -------------------------------------------------------
+ROUTER.get('/home', async (req, res) => {
+  try {
+    let queryObj = {...req.query};
+
+    let sqlRequest = new sql.Request();
+
+    let homeOutput = await readTemplate(`${__dirname}/client/movies/index.html`, 'utf-8');
+    let sidebarOutput = await readTemplate(`${__dirname}/client/movies/templates/sidebar-movie.html`, 'utf-8');
+    let cardOutput = await readTemplate(`${__dirname}/client/movies/templates/card-movie.html`, 'utf-8');
+    let genresOutput = await readTemplate(`${__dirname}/resources/global/templates/genre-options.html`, 'utf-8');
+    let artistsOutput = await readTemplate(`${__dirname}/resources/global/templates/artist-options.html`, 'utf-8');
+    let yearsOutput = await readTemplate(`${__dirname}/resources/global/templates/year-options.html`, 'utf-8');
+    let languagesOutput = await readTemplate(`${__dirname}/resources/global/templates/language-options.html`, 'utf-8');
+
+    sqlRequest.execute('[usp_movies_get_all]', async (err, data) => {
+      if(err) console.log(`ERROR!!! ${err}`);
+
+      let movieData = await createDecodedData(data.recordset[0], generateMovie);
+
+      let finalData = filteredData(movieData, queryObj);
+
+      let year = await generateFilterOptions(finalData, 'releaseYear');
+      yearsOutput = await year.map(el => yearsOutput.replace(/{%YEAR%}/g, el)).join('');
+      homeOutput = await homeOutput.replace('{%YEAR_OPTION%}', yearsOutput);
+
+      let language = await generateFilterOptions(finalData, 'language');
+      languagesOutput = await language.map(el => languagesOutput.replace(/{%LANGUAGE%}/g, el)).join('');
+      homeOutput = await homeOutput.replace('{%LANGUAGE_OPTION%}', languagesOutput);
+
+      sidebarOutput = await finalData.map(el => replaceTemplate(sidebarOutput, el)).join('');
+      homeOutput = await homeOutput.replace('{%SIDEBAR_MOVIE%}', sidebarOutput);
+
+      cardOutput = await finalData.map(el => replaceTemplate(cardOutput, el)).join('');
+      homeOutput = await homeOutput.replace('{%MOVIE_CARD%}', cardOutput);
+
+      let artists = await filterArrayValues(finalData, 'cast');
+      artistsOutput = await artists.map(el => artistsOutput.replace(/{%ARTIST%}/g, el)).join('');
+      homeOutput = await homeOutput.replace('{%CAST_OPTION%}', artistsOutput);
+
+      let genres = await filterArrayValues(finalData, 'genres');
+      genresOutput = await genres.map(el => genresOutput.replace(/{%GENRE%}/g, el)).join('');
+      homeOutput = await homeOutput.replace('{%GENRES_OPTION%}', genresOutput);
+
+      res
+        .status(200)
+        .type('text/html')
+        .send(homeOutput);
+    });
+  } catch(err) {
+    res
+      .status(400)
+      .json({
+        status: 'failed',
+        message: `ERROR!!! ${err}`
+      });
+  };
 });
 
 // -------------------------------------------------------

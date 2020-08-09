@@ -1,0 +1,372 @@
+/* ==============================================
+ CONTENT INDEX
+=================================================
+-| IMPORT FONTS
+-| GENERAL
+-| NAV
+-| LAYOUT
+-| BUTTONS
+------| REGULAR BUTTON
+------| BACK BUTTON
+-| INPUTS
+------| TOGGLE SWITCH
+-| MODALS
+------| LOG IN MODAL
+================================================= */
+
+/* --------------------------------------------- */
+/* IMPORT FONTS */
+/* --------------------------------------------- */
+@import url('https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i');
+@import url('https://fonts.googleapis.com/css2?family=Shrikhand&display=swap');
+/* --------------------------------------------- */
+/* GENERAL */
+/* --------------------------------------------- */
+:root {
+  --primary-color: #12c27f;
+  --dark-primary-color: #0a4c2a;
+  --dark-base: #1f1f1f;
+  --alternative-dark: #323232;
+  --semi-dark-base: #A5A5A5;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  line-height: 1.80857;
+  color: #666666;
+}
+
+h1 {
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+h2 {
+  color: var(--semi-dark-base);
+  margin: 0;
+}
+
+h4 {
+  font-weight: 300;
+  margin: 0;
+}
+
+h5 {
+  margin: 0;
+  padding: 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* --------------------------------------------- */
+/* BOOTSTRAP OVERWRITE */
+/* --------------------------------------------- */
+.table {
+  background-color: #FFF;
+}
+
+.dropdown-toggle {
+  padding: 5px 10px;
+  display: flex;
+  border-radius: 0;
+  align-items: center;
+  background-color: #EAE9E8;
+  border: 2px solid #EAE9E8 !important;
+  height: 42px;
+}
+
+.dropdown-toggle::after {
+  width: 20px;
+  height: 13px;
+  position: absolute;
+  right: 8px;
+  border: none;
+  background-image: url("../images/narrow.svg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.bootstrap-select .dropdown-toggle:focus {
+  outline: none !important;
+}
+
+.dropdown-menu {
+  border-radius: 0;
+  border: 0;
+  background-color: #EAE9E8;
+}
+
+.dropdown-item:focus, .dropdown-item:hover {
+  background-color: #CACACA;
+}
+
+.bootstrap-select > .dropdown-toggle.bs-placeholder {
+  color: #828282;
+}
+
+.bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+  width: 100%;
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+  background-color: var(--primary-color);
+}
+
+/* --------------------------------------------- */
+/* NAV */
+/* --------------------------------------------- */
+nav {
+  height: 85px;
+  background-color: #FFF;
+}
+
+.the-spot-logo {
+  font-family: 'Shrikhand', cursive;
+  font-size: 39px;
+  transition: 0.4s;
+  color: var(--dark-base);
+  cursor: pointer;
+}
+
+.the-spot-logo img {
+  width: 47px;
+  margin-right: 15px;
+}
+
+.the-spot-logo:hover {
+  font-size: 40px;
+  color: var(--primary-color);
+}
+
+.nav-links a {
+  color: var(--alternative-dark);
+  transition: color 0.4s;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0 20px;
+}
+
+.nav-links a:hover {
+  color: var(--primary-color);
+}
+
+/* --------------------------------------------- */
+/* LAYOUT */
+/* --------------------------------------------- */
+.dark-body {
+  background-color: var(--dark-base);
+}
+
+.alternative-dark-background {
+  background-color: var(--alternative-dark);
+}
+
+.dark-body-container {
+  margin: 70px auto 40px;
+  padding: 40px;
+  border-radius: 1px;
+  background-color: #FFF;
+}
+
+/* -------------------------------- */
+/* BUTTONS */
+/* -------------------------------- */
+/* ~~~~~~~~~~~~~~~~~~~ */
+/* REGULAR BUTTON */
+/* ~~~~~~~~~~~~~~~~~~~ */
+.spt-button {
+  padding: 13px;
+  border: none;
+  color: #FFF;
+  font-size: 18px;
+  font-weight: 500;
+  background-color: var(--primary-color);
+  transition-property: box-shadow, background-color, transform;
+  transition-duration: 0.3s;
+}
+
+.spt-button:hover,
+.spt-button:focus {
+  background-color: var(--dark-primary-color);
+  transform: scale(1.01);
+  outline: none;
+  color: #FFF;
+  text-decoration: none;
+}
+
+.spt-button:active {
+  background-color: #127d43;
+}
+
+/* ~~~~~~~~~~~~~~~~~~~ */
+/* BACK BUTTON */
+/* ~~~~~~~~~~~~~~~~~~~ */
+.spt-back-button {
+  font-size: 19px;
+  font-weight: 400;
+  color: #666;
+}
+
+.spt-back-button:hover {
+  text-decoration: none;
+  color: var(--primary-color);
+  transition: color 0.3s;
+}
+
+.spt-back-button svg {
+  margin-right: 8px;
+  transition: transform 0.3s;
+}
+
+.spt-back-button:hover svg {
+  transform: translateX(-3px);
+}
+
+/* --------------------------------------------- */
+/* INPUTS */
+/* --------------------------------------------- */
+.spt-input {
+  display: flex;
+  flex-direction: column;
+}
+
+.spt-input > input,
+.spt-input > select {
+  padding: 5px 10px;
+  border: 2px solid #EAE9E8;
+  outline: none;
+  color: var(--dark-base);
+  background-color: #EAE9E8;
+  transition: border 0.2s;
+}
+
+.spt-input > input:focus,
+.spt-input > select:focus {
+  border: 2px solid var(--primary-color);
+}
+
+.spt-input > label,
+.spt-input > label {
+  font-weight: 600;
+  margin: 0;
+}
+
+.spt-input > input[readonly] {
+  color: var(--primary-color);
+  cursor: copy;
+  border-color: #EAE9E8;
+}
+
+.spt-input > input[readonly]:active {
+  border-color: var(--primary-color);
+  cursor: copy;
+}
+
+.spt-input > select {
+  padding-right: 35px;
+  background-image: url("../images/narrow.svg");
+  background-position: 92% center;
+  background-repeat: no-repeat;
+  background-size: 20px;
+  appearance: none;
+}
+
+/* ~~~~~~~~~~~~~~~~~~~ */
+/* TOGGLE SWITCH */
+/* ~~~~~~~~~~~~~~~~~~~ */
+.spt-switch {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 122px;
+  height: 34px;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.spt-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.spt-switch label {
+  margin: 0;
+  position: absolute;
+  font-size: 14px;
+  cursor: pointer;
+  transition: .4s;
+}
+
+.spt-switch label.disabled-lb {
+  right: 10px;
+}
+
+.spt-switch label.enabled-lb {
+  left: -52px;
+}
+
+.spt-switch .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 2px solid var(--primary-color);
+  border-radius: 34px;
+  transition: .4s;
+}
+
+.spt-switch .slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 2px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  transition: .4s;
+}
+
+.spt-switch input:checked + .slider:before,
+.spt-switch input:checked ~ label.disabled-lb,
+.spt-switch input:checked ~ label.enabled-lb {
+  transform: translateX(85px);
+}
+
+/* ~~~~~~~~~~~~~~~~~~~ */
+/* ERROR */
+/* ~~~~~~~~~~~~~~~~~~~ */
+.error, .custom-error {
+  font-weight: 400;
+  color: #d82f2a;
+}
+
+/* --------------------------------------------- */
+/* MODALS */
+/* --------------------------------------------- */
+/* ~~~~~~~~~~~~~~~~~~~ */
+/* LOG IN MODAL */
+/* ~~~~~~~~~~~~~~~~~~~ */
+.login-modal .modal-content {
+  border-radius: 0;
+}
+
+.login-modal h5 {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.login-modal h5:hover:not(.active) {
+  opacity: 1;
+}
+
+.login-modal h5.active {
+  opacity: 1;
+  color: var(--primary-color);
+}
