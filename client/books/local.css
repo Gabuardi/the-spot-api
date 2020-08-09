@@ -1,0 +1,5 @@
+.spt-header {
+  width: 100%;
+  height: 450px;
+  background-image: linear-gradient(-90deg, var(--dark-primary-color),var(--primary-color));
+}
