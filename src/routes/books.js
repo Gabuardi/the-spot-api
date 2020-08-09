@@ -1,8 +1,12 @@
 import express from 'express';
+import path from 'path';
+import fs from 'fs';
 import sql from 'mssql';
-import {createDecodedData} from '../utils/common.js';
 import {encode, decode} from '../utils/codification.js';
 import {sqlResponseHandler} from "../utils/handlers.js";
+import {createDecodedData, readTemplate, filteredData, filterArrayValues, generateFilterOptions} from '../utils/common.js';
+
+const __dirname = path.resolve();
 
 const ROUTER = express.Router();
 
@@ -19,9 +23,9 @@ function generateBook(el) {
     bookId: el.book_id,
     title: decode(el.title),
     releaseYear: el.release_year,
-    languageFk: el.language_fk,
-    artistFk: el.artist_fk,
-    editorialFk: el.editorial_fk,
+    language: decode(el.language),
+    artist: decode(el.artist),
+    editorial: decode(el.editorial),
     genres: parseGenres(el.genres)
   }
 };
@@ -33,10 +37,89 @@ function generateBookTitle(el) {
   }
 };
 
+function replaceTemplate(html, data){
+  let output = html.replace(/%{MOVIEID}%/g, data.bookId);
+  output = output.replace(/{%IMAGE%}/g, data.bookId);
+  output = output.replace(/{%TITLE%}/g, data.title);
+  output = output.replace(/{%AUTHOR%}/g, data.artist);
+  output = output.replace(/{%GENRE%}/g, data.genres);
+  output = output.replace(/{%EDITORIAL%}/g, data.editorial);
+  output = output.replace(/{%YEAR%}/g, data.releaseYear);
+  output = output.replace(/{%LANGUAGE%}/g, data.language);
+  
+  return output;
+};
+
+// -------------------------------------------------------
+// BOOK HOME PAGE
+// -------------------------------------------------------
+ROUTER.get('/', async (req, res) => {
+  try {
+    let queryObj = {...req.query};
+
+    let sqlRequest = new sql.Request();
+
+    let homeOutput = await readTemplate(`${__dirname}/views/client/books/index.html`, 'utf-8');
+    let sidebarOutput = await readTemplate(`${__dirname}/views/client/books/templates/sidebar-book.html`, 'utf-8');
+    let cardOutput = await readTemplate(`${__dirname}/views/client/books/templates/card-book.html`, 'utf-8');
+    let artistsOutput = '<option>{%AUTHOR%}</option>';
+    let genresOutput = '<option>{%GENRE%}</option>';
+    let editorialsOutput = '<option>{%EDITORIAL%}</option>';
+    let yearsOutput = '<option>{%YEAR%}</option>';
+    let languagesOutput = '<option>{%LANGUAGE%}</option>';
+
+    sqlRequest.execute('[usp_books_get_all]', async (err, data) => {
+      if(err) console.log(`ERROR!!! ${err}`);
+
+      let bookData = await createDecodedData(data.recordset[0], generateBook);
+
+      let finalData = filteredData(bookData, queryObj);
+
+      sidebarOutput = await finalData.map(el => replaceTemplate(sidebarOutput, el)).join('');
+      homeOutput = await homeOutput.replace('{%SIDEBAR_BOOK%}', sidebarOutput);
+
+      let authors = await generateFilterOptions(finalData, 'artist');
+      artistsOutput = await authors.map(el => artistsOutput.replace(/{%AUTHOR%}/g, el)).join('');
+      homeOutput = await homeOutput.replace('{%AUTHORS_OPTION%}', artistsOutput);
+
+      let genres = await filterArrayValues(finalData, 'genres');
+      genresOutput = await genres.map(el => genresOutput.replace(/{%GENRE%}/g, el)).join('');
+      homeOutput = await homeOutput.replace('{%GENRES_OPTION%}', genresOutput);
+
+      let editorials = await generateFilterOptions(finalData, 'editorial');
+      editorialsOutput = await editorials.map(el => editorialsOutput.replace(/{%EDITORIAL%}/g, el)).join('');
+      homeOutput = await homeOutput.replace('{%EDITORIALS_OPTION%}', editorialsOutput);
+
+      let year = await generateFilterOptions(finalData, 'releaseYear');
+      yearsOutput = await year.map(el => yearsOutput.replace(/{%YEAR%}/g, el)).join('');
+      homeOutput = await homeOutput.replace('{%YEARS_OPTION%}', yearsOutput);
+
+      let language = await generateFilterOptions(finalData, 'language');
+      languagesOutput = await language.map(el => languagesOutput.replace(/{%LANGUAGE%}/g, el)).join('');
+      homeOutput = await homeOutput.replace('{%LANGUAGES_OPTION%}', languagesOutput);
+
+      cardOutput = await finalData.map(el => replaceTemplate(cardOutput, el)).join('');
+      homeOutput = await homeOutput.replace('{%BOOK_CARD%}', cardOutput);
+
+      res
+        .status(200)
+        .type('text/html')
+        .send(homeOutput);
+    });
+  } catch(err) {
+    res
+      .status(400)
+      .json({
+        status: 'failed',
+        message: `ERROR!!! ${err}`
+      });
+  };
+});
+
 // -------------------------------------------------------
 // GET ALL BOOKS
 // -------------------------------------------------------
-ROUTER.get('/', (request, response) => {
+ROUTER.get('/all', (request, response) => {
   let sqlRequest = new sql.Request();
 
   let responseHandler = (err, result) => {

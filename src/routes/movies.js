@@ -4,7 +4,7 @@ import fs from 'fs';
 import sql from 'mssql';
 import {sqlResponseHandler} from '../utils/handlers.js';
 import {encode, decode} from '../utils/codification.js';
-import {createDecodedData, filteredData, filterArrayValues, generateFilterOptions} from '../utils/common.js';
+import {createDecodedData, readTemplate, filteredData, filterArrayValues, generateFilterOptions} from '../utils/common.js';
 
 const __dirname = path.resolve();
 
@@ -63,15 +63,6 @@ function generateMovieTitles(el) {
     title: encode(el.title)
   }
 }
-
-const readTemplate = (file, type) => {
-  return new Promise((resolve, reject) => {
-      fs.readFile(file, type, (err, data) => {
-          if(err) reject('File Not Found!')
-          resolve(data);
-      });
-  });
-};
 
 function replaceTemplate(html, data){
   let output = html.replace(/%{MOVIEID}%/g, data.movieId)
