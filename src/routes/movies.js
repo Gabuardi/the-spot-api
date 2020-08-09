@@ -74,7 +74,8 @@ const readTemplate = (file, type) => {
 };
 
 function replaceTemplate(html, data){
-  let output = html.replace(/{%TITLE%}/g, data.title);
+  let output = html.replace(/%{MOVIEID}%/g, data.movieId)
+  output = output.replace(/{%TITLE%}/g, data.title);
   output = output.replace(/{%YEAR%}/g, data.releaseYear);
   output = output.replace(/{%LANGUAGE%}/g, data.language);
   output = output.replace(/{%GENRE%}/g, data.genres);
@@ -199,6 +200,9 @@ ROUTER.get('/', async (req, res) => {
 
       let finalData = filteredData(movieData, queryObj);
 
+      sidebarOutput = await finalData.map(el => replaceTemplate(sidebarOutput, el)).join('');
+      homeOutput = await homeOutput.replace('{%SIDEBAR_MOVIE%}', sidebarOutput);
+
       let year = await generateFilterOptions(finalData, 'releaseYear');
       yearsOutput = await year.map(el => yearsOutput.replace(/{%YEAR%}/g, el)).join('');
       homeOutput = await homeOutput.replace('{%YEAR_OPTION%}', yearsOutput);
@@ -206,9 +210,6 @@ ROUTER.get('/', async (req, res) => {
       let language = await generateFilterOptions(finalData, 'language');
       languagesOutput = await language.map(el => languagesOutput.replace(/{%LANGUAGE%}/g, el)).join('');
       homeOutput = await homeOutput.replace('{%LANGUAGE_OPTION%}', languagesOutput);
-
-      sidebarOutput = await finalData.map(el => replaceTemplate(sidebarOutput, el)).join('');
-      homeOutput = await homeOutput.replace('{%SIDEBAR_MOVIE%}', sidebarOutput);
 
       cardOutput = await finalData.map(el => replaceTemplate(cardOutput, el)).join('');
       homeOutput = await homeOutput.replace('{%MOVIE_CARD%}', cardOutput);

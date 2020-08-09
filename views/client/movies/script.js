@@ -13,3 +13,18 @@ $('#select-year').change(function() {
   let selected = $(this).val();
   runNewUrl('releaseYear', selected);
 });
+
+$('#select-language').change(function() {
+  let selected = $(this).val();
+  runNewUrl('language', selected);
+});
+
+$('#select-artist').change(function() {
+  let selected = $(this).val();
+  runNewUrl('cast', selected);
+});
+
+$('#select-genre').change(function() {
+  let selected = $(this).val();
+  runNewUrl('genres', selected);
+});
