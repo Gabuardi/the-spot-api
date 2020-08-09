@@ -160,7 +160,7 @@ ROUTER.post('/genre/:movieId', (request, response) => {
 // -------------------------------------------------------
 // GET ALL MOVIES
 // -------------------------------------------------------
-ROUTER.get('/', (request, response) => {
+ROUTER.get('/all', (request, response) => {
   let sqlRequest = new sql.Request();
 
   let responseHandler = (err, result) => {
@@ -176,7 +176,7 @@ ROUTER.get('/', (request, response) => {
 // -------------------------------------------------------
 // GET HOME MOVIE VIEW
 // -------------------------------------------------------
-ROUTER.get('/home', async (req, res) => {
+ROUTER.get('/', async (req, res) => {
   try {
     let queryObj = {...req.query};
 
