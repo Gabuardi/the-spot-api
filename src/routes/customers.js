@@ -68,6 +68,7 @@ ROUTER.post('/', (request, response) => {
   sqlRequest.input('first_name', encode(data.firstName));
   sqlRequest.input('last_name', encode(data.lastName));
   sqlRequest.input('email_addr', encode(data.email));
+  sqlRequest.input('google_account', encode(data.googleAccount));
 
   let responseHandler = (err, result) => {
     sqlResponseHandler(err, result, response, () => response.send(`✅ CUSTOMER -> ${data.username} has been created`));
@@ -78,7 +79,7 @@ ROUTER.post('/', (request, response) => {
 // -------------------------------------------------------
 // CUSTOMER EXISTS
 // -------------------------------------------------------
-ROUTER.post('/check/:username', (request, response) => {
+ROUTER.get('/check/:username', (request, response) => {
   let username = request.params.username;
 
   let sqlRequest = new sql.Request();
@@ -86,15 +87,15 @@ ROUTER.post('/check/:username', (request, response) => {
   sqlRequest.input('username', encode(username));
 
   let responseHandler = (err, result) => {
-    if(err){
+    if (err) {
       response.json({name: err.name, code: err.code, info: err.originalError.info});
     } else {
       if (result.recordset[0].exists === 'true') {
-        response.send(`❌ This customer "${username}" already exists`);
+        response.sendStatus(200);
       } else if (result.recordset[0].exists === 'false') {
-        response.send(`✅ This customer "${username}" does not exist`);
-      };
-    };
+        response.sendStatus(404);
+      }
+    }
   };
 
   sqlRequest.execute('[usp_customers_exists]', responseHandler)

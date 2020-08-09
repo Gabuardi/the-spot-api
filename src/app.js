@@ -3,7 +3,6 @@ import sql from 'mssql';
 import base64 from 'base-64';
 import randomString from 'randomstring';
 import fileUpload from 'express-fileupload';
-import cors from 'cors';
 
 const APP = express();
 const PORT = process.env.PORT || 3000;
@@ -16,7 +15,6 @@ const DB_CONFIG = {
   parseJSON: true
 };
 
-APP.use(cors());
 APP.use(express.json());
 APP.use(fileUpload({createParentPath: true}));
 
