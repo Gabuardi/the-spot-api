@@ -31,7 +31,6 @@
 
     $userTypeSwitch.click((e) => {
       e.stopPropagation();
-      // $userTypeInput.click();
       let inputChecked = $userTypeInput.prop('checked');
       $userTypeInput.prop('checked', !inputChecked);
       inputChecked ? $signInOption.show() : $signInOption.hide();
@@ -63,9 +62,8 @@
     function authCustomer(data) {
       $.ajax({
         type: 'POST',
-        crossDomain: true,
         contentType: 'application/json',
-        url: 'http://localhost:3000/customers/authenticate',
+        url: '/customers/authenticate',
         data: data,
         success: (res) => {
           res.type = 2;
@@ -90,16 +88,21 @@
       submitHandler: () => {
         let username = $('input[name="username"]').val();
         let password = $('input[name="password"]').val();
-        const data = {username: username, password: password};
+        const data = JSON.stringify({username: username, password: password});
 
+        $('#login-error').addClass('d-none');
         if ($('input[name="isStaff"]').prop('checked')) {
-          authStaff(JSON.stringify(data));
+          authStaff(data);
         } else {
           authCustomer(data);
         }
       }
     });
   })();
+
+  /* ..............................................
+    SIGN IN MODAL VALIDATION
+    ................................................. */
 
 
 }(jQuery));
