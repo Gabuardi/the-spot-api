@@ -6,6 +6,26 @@ import {createDecodedData} from '../utils/common.js';
 
 const ROUTER = express.Router();
 
+function insertActorsInMovieSP(movie, artists) {
+  let artistArray = Array.isArray(artists) ? artists : [artists];
+  artistArray.forEach((artist) => {
+    let sqlRequest = new sql.Request();
+    sqlRequest.input('movie_fk', movie);
+    sqlRequest.input('artist_fk', artist);
+    sqlRequest.execute('usp_movies_cast_insert');
+  })
+}
+
+function insertGenresInMovie(movie, genres) {
+  let genresArray = Array.isArray(genres) ? genres : [genres];
+  genresArray.forEach((genre) => {
+    let sqlRequest = new sql.Request();
+    sqlRequest.input('movie_fk', movie);
+    sqlRequest.input('visual_genre_fk', genre);
+    sqlRequest.execute('usp_movie_genres_insert');
+  });
+}
+
 function parseCast(castArray) {
   let cast = [];
   castArray.forEach(el => {
@@ -44,29 +64,35 @@ function generateMovieTitles(el) {
 // ADD NEW MOVIE
 // -------------------------------------------------------
 ROUTER.post('/', (request, response) => {
-  let data = request.body;
-
+  let dataBody = request.body;
+  let movieFile = request.files.movieFile;
+  let artwork = request.files.artworkFile;
   let sqlRequest = new sql.Request();
 
-  sqlRequest.input('title', encode(data.title));
-  sqlRequest.input('release_year', data.release_year);
-  sqlRequest.input('language_fk', data.language_fk);
-
   let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, () => response.send(`✅ MOVIE -> ${data.title} has been created`))
+    sqlResponseHandler(err, result, response, (response, result) => {
+      let movieId = result.recordset[0]['movie_id'];
+      insertActorsInMovieSP(movieId, dataBody.cast);
+      insertGenresInMovie(movieId, dataBody.genres);
+      artwork.mv(`././resources/movies/artworks/${movieId}.jpg`);
+      movieFile.mv(`././resources/movies/media/${movieId}.mp4`);
+      response.send(movieId);
+    });
   };
 
+  sqlRequest.input('title', encode(dataBody.title));
+  sqlRequest.input('release_year', dataBody.year);
+  sqlRequest.input('language_fk', dataBody.language);
   sqlRequest.execute('[usp_movies_insert]', responseHandler);
 });
 
 // -------------------------------------------------------
 // UPLOAD MOVIE FILE
 // -------------------------------------------------------
-ROUTER.post('/upload/media/:movieId', (request, response) => {
-  let movieFile = request.files.file;
-  let movieId = request.params.movieId;
-  movieFile.mv(`././resources/movies/media/${movieId}.mp4`);
-  response.send('Movie created');
+ROUTER.post('/upload/temp/artwork', (request, response) => {
+  let artworkFile = request.files.artworkFile;
+  artworkFile.mv(`././resources/movies/artworks/temp.jpg`);
+  response.sendStatus(200);
 });
 
 // -------------------------------------------------------
@@ -171,9 +197,9 @@ ROUTER.post('/log/:username', (request, response) => {
   let sqlRequest = new sql.Request();
 
   sqlRequest.input('username', encode(username)),
-  sqlRequest.input('reg_id', data.reg_id),
-  sqlRequest.input('action_id', 1),
-  sqlRequest.input('title', encode(data.title));
+    sqlRequest.input('reg_id', data.reg_id),
+    sqlRequest.input('action_id', 1),
+    sqlRequest.input('title', encode(data.title));
   sqlRequest.input('release_year', data.release_year);
   sqlRequest.input('language_fk', data.language_fk);
 

@@ -63,6 +63,8 @@ APP.use('/logs', logsRouter);
 APP.use('/customers', customersRouter);
 
 APP.use('/avatar', express.static('resources/avatars'));
+APP.use('/movies/artworks/', express.static('resources/movies/artworks/'));
+
 
 APP.post('/encrypt', (request, response) => {
   let data = request.body;
