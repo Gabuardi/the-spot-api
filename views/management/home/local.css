@@ -1,0 +1,40 @@
+.greeting-bar {
+  padding: 15px 20px;
+  background-color: var(--alternative-dark);
+  display: flex;
+  align-items: center;
+  color: var(--semi-dark-base);
+}
+
+.greeting-bar span {
+  color: var(--primary-color);
+}
+
+a.management-option {
+  width: 220px;
+  height: 220px;
+  background-color: var(--alternative-dark);
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #FFF;
+  transition-property: background-color, transform;
+  transition-duration: 0.6s;
+}
+
+a.management-option:hover {
+  text-decoration: none;
+  transform: scale(1.07);
+  background-color: var(--primary-color);
+}
+
+.management-option svg {
+  font-size: 90px;
+}
+
+.management-option h4 {
+  margin-top: 20px;
+  text-transform: uppercase;
+}

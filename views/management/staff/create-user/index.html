@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Spot - Management</title>
+
+<!-- external resources -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <link rel="stylesheet" href="../../../shared/css/global.css">
+  <link rel="stylesheet" href="local.css">
+  <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/solid.js" integrity="sha384-4RG3cEPIlCBy6VNzxM9ZoEwZW+65ed5JDOfaJAnQqwV6ha/jZDJTXjFmvjFM4bk4" crossorigin="anonymous"></script>
+  <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/fontawesome.js" integrity="sha384-DNo9bmYZCHLtp0n0l0XA2UsoRHX1nx38aRP+p9yoP5A8kVTfeWG3aySMOq5FD/v3" crossorigin="anonymous"></script>
+</head>
+<body class="dark-body">
+
+<nav class="container-fluid px-5 d-flex align-items-center">
+  <a href="../../home/index.html" class="the-spot-logo color-test"><img src="../../../shared/images/play-logo.svg" alt="">THE SPOT</a>
+  <h2 class="ml-4 py-2 pl-3 border-left">Management</h2>
+</nav>
+
+<div class="container dark-body-container d-flex flex-column align-items-stretch">
+  <a  href="../users-list/index.html" class="spt-back-button mt-n3 mb-3 d-flex justify-content-start align-items-center">
+    <i class="fas fa-chevron-circle-left"></i> <span>STAFF USERS LIST</span>
+  </a>
+  <h1 class="text-center">CREATE NEW STAFF USER</h1>
+  <form class="row">
+    <div class="spt-input mt-4 offset-3 col-3">
+      <label>USERNAME</label>
+      <input type="text" aria-label="username" placeholder="Enter an username">
+    </div>
+    <div class="spt-input mt-4 col-3">
+      <label>ROLE</label>
+      <select aria-label="role">
+        <option value="">ROLE 1</option>
+        <option value="">ROLE 1</option>
+        <option value="">ROLE 1</option>
+        <option value="">ROLE 1</option>
+      </select>
+    </div>
+    <div class="spt-input mt-3 offset-3 col-3">
+      <label>EMAIL</label>
+      <input type="email" aria-label="username" placeholder="Enter an email address">
+    </div>
+    <div class="spt-input mt-3 col-3">
+      <label>PASSWORD</label>
+      <input name="password" class="readonly" type="text" aria-label="username" value="2322NX92"  readonly>
+    </div>
+    <div class="spt-input mt-3 offset-3 col-6">
+      <label>SECURITY QUESTION</label>
+      <input type="text" aria-label="security quesiton" placeholder="What's your secret?">
+    </div>
+    <div class="spt-input mt-3 offset-3 col-6">
+      <label>SECURITY ANSWER</label>
+      <input type="text" aria-label="security answer" placeholder="Tell me an answer">
+    </div>
+    <button type="submit" class="spt-button mt-5 offset-4 col-4">CREATE USER</button>
+  </form>
+</div>
+
+
+<!-- scripts -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+<script src="script.js"></script>
+</body>
+</html>

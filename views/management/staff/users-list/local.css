@@ -1,0 +1,8 @@
+.profile-pic {
+  width: 38px;
+  height: 38px;
+  background-color: var(--primary-color);
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
+}

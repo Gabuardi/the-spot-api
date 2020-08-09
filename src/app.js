@@ -33,6 +33,7 @@ APP.listen(PORT, () => console.log(`- || APP RUNNING ||--> http://localhost:${PO
 
 // -----------------------------------------------------------------
 import homeRouter from './routes/home.js';
+import managementRouter from './routes/management/management.js';
 import rolesRouter from './routes/roles.js'
 import staffRouter from './routes/staff.js';
 import consecutivesRouter from './routes/consecutives.js';
@@ -49,6 +50,7 @@ import logsRouter from './routes/logs.js';
 import customersRouter from './routes/customers.js';
 
 APP.use('/', homeRouter);
+APP.use('/management', managementRouter);
 APP.use('/roles', rolesRouter);
 APP.use('/staff', staffRouter);
 APP.use('/consecutives', consecutivesRouter);
@@ -68,7 +70,7 @@ APP.use('/avatar', express.static('resources/avatars'));
 APP.use('/movies/artworks/', express.static('resources/movies/artworks/'));
 
 APP.use(express.static('resources'));
-APP.use(express.static('client'));
+APP.use(express.static('views'));
 
 APP.post('/encrypt', (request, response) => {
   let data = request.body;

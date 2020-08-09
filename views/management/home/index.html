@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Spot - Management</title>
+
+  <!-- external resources -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/solid.js" integrity="sha384-4RG3cEPIlCBy6VNzxM9ZoEwZW+65ed5JDOfaJAnQqwV6ha/jZDJTXjFmvjFM4bk4" crossorigin="anonymous"></script>
+  <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/fontawesome.js" integrity="sha384-DNo9bmYZCHLtp0n0l0XA2UsoRHX1nx38aRP+p9yoP5A8kVTfeWG3aySMOq5FD/v3" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/global/css/global.css">
+  <link rel="stylesheet" href="/management/home/local.css">
+</head>
+<body class="">
+
+<!-- ---------------------------- -->
+<nav class="container-fluid px-5 d-flex align-items-center">
+  <div class="the-spot-logo color-test"><img src="../../../the-spot-client/shared/images/play-logo.svg" alt="">THE SPOT
+  </div>
+  <h2 class="ml-4 py-2 pl-3 border-left">Management</h2>
+</nav>
+
+<div class="greeting-bar">
+  <h4>Welcome <span id="greeting-user-name">{{user}}</span>, what do you want to do?</h4>
+</div>
+
+<div class="container py-5 d-flex flex-column align-items-stretch">
+
+  <h1 class="text-center mt-4 mb-5">OPTIONS</h1>
+
+  <!-- section -->
+  <div class="section layout_padding">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="full">
+            <div class="heading_main text_align_right">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row d-flex justify-content-center">
+        <div class="col-4 d-flex justify-content-center">
+          <a href="../staff/users-list/index.html" class="management-option">
+            <i class="fas fa-user-tie"></i>
+            <h4>Staff Users</h4>
+          </a>
+        </div>
+
+        <div class="col-4 d-flex justify-content-center">
+          <a href="" class="management-option">
+            <i class="fas fa-boxes"></i>
+            <h4>Consecutives</h4>
+          </a>
+        </div>
+
+        <div class="col-4 d-flex justify-content-center">
+          <a href="../logs/index.html" class="management-option">
+            <i class="fas fa-clipboard-list"></i>
+            <h4>Logs</h4>
+          </a>
+        </div>
+
+        <div class="col mt-5 d-flex justify-content-center">
+          <a href="" class="management-option">
+            <i class="fas fa-film"></i>
+            <h4>Movies</h4>
+          </a>
+        </div>
+
+        <div class="col mt-5 d-flex justify-content-center">
+          <a href="" class="management-option">
+            <i class="fas fa-music"></i>
+            <h4>Music</h4>
+          </a>
+        </div>
+
+        <div class="col mt-5 d-flex justify-content-center">
+          <a href="" class="management-option">
+            <i class="fas fa-book"></i>
+            <h4>Books</h4>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- end section -->
+
+
+  <!-- scripts -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  <script src="script.js"></script>
+</body>
+</html>

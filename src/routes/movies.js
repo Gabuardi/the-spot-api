@@ -111,9 +111,11 @@ ROUTER.post('/', (request, response) => {
 });
 
 // -------------------------------------------------------
-// UPLOAD MOVIE FILE
+// UPLOAD TEMP ARTWORK FILE
 // -------------------------------------------------------
 ROUTER.post('/upload/temp/artwork', (request, response) => {
+  console.log('ASD');
+
   let artworkFile = request.files.artworkFile;
   artworkFile.mv(`././resources/movies/artworks/temp.jpg`);
   response.sendStatus(200);
@@ -182,9 +184,9 @@ ROUTER.get('/', async (req, res) => {
 
     let sqlRequest = new sql.Request();
 
-    let homeOutput = await readTemplate(`${__dirname}/client/movies/index.html`, 'utf-8');
-    let sidebarOutput = await readTemplate(`${__dirname}/client/movies/templates/sidebar-movie.html`, 'utf-8');
-    let cardOutput = await readTemplate(`${__dirname}/client/movies/templates/card-movie.html`, 'utf-8');
+    let homeOutput = await readTemplate(`${__dirname}/views/client/movies/index.html`, 'utf-8');
+    let sidebarOutput = await readTemplate(`${__dirname}/views/client/movies/templates/sidebar-movie.html`, 'utf-8');
+    let cardOutput = await readTemplate(`${__dirname}/views/client/movies/templates/card-movie.html`, 'utf-8');
     let genresOutput = await readTemplate(`${__dirname}/resources/global/templates/genre-options.html`, 'utf-8');
     let artistsOutput = await readTemplate(`${__dirname}/resources/global/templates/artist-options.html`, 'utf-8');
     let yearsOutput = await readTemplate(`${__dirname}/resources/global/templates/year-options.html`, 'utf-8');

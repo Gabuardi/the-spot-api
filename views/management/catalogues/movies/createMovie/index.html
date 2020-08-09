@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Spot - Management</title>
+
+  <!-- external resources -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+  <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/solid.js" integrity="sha384-4RG3cEPIlCBy6VNzxM9ZoEwZW+65ed5JDOfaJAnQqwV6ha/jZDJTXjFmvjFM4bk4" crossorigin="anonymous"></script>
+  <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/fontawesome.js" integrity="sha384-DNo9bmYZCHLtp0n0l0XA2UsoRHX1nx38aRP+p9yoP5A8kVTfeWG3aySMOq5FD/v3" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/global/css/global.css">
+  <link rel="stylesheet" href="/management/catalogues/movies/createMovie/local.css">
+</head>
+<body class="dark-body">
+
+<!-- ---------------------------- -->
+<nav class="container-fluid px-5 d-flex align-items-center">
+  <div class="the-spot-logo color-test"><img src="/global/images/play-logo.svg" alt="">THE SPOT
+  </div>
+  <h2 class="ml-4 py-2 pl-3 border-left">Management</h2>
+</nav>
+
+<div class="container dark-body-container py-5 d-flex flex-column align-items-stretch">
+  <h1 class="text-center mb-5">CREATE NEW MOVIE</h1>
+  <form id="new-movie-form" class="row">
+    <div class="col-8">
+      <div class="row">
+        <div class="spt-input col-12 mb-3">
+          <label>Title</label>
+          <input name="title" type="text" aria-label="username" placeholder="Enter the movie title">
+        </div>
+        <div class="spt-input col-6 mb-3">
+          <label>Year</label>
+          <input name="year" type="text" aria-label="username" placeholder="Enter Movie Year">
+        </div>
+        <div class="spt-input col-6">
+          <label>Language</label>
+          <select name="language" title="Select a language" class="selectpicker" aria-label="language">
+            <option>1</option>
+            <option>2</option>
+          </select>
+        </div>
+        <div class="spt-input col-6 mb-3">
+          <label>Cast</label>
+          <select name="cast" title="Select the actors" class="selectpicker" multiple aria-label="actors">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+          </select>
+        </div>
+        <div class="spt-input col-6">
+          <label>Genres</label>
+          <select name="genres" title="Select the movie genres" class="selectpicker" multiple aria-label="genres">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+          </select>
+        </div>
+        <div class="spt-input col-5 mb-4">
+          <input type="text" aria-label="new actor" placeholder="Add a new actor">
+        </div>
+        <div class="col-1 pl-0">
+          <button class="spt-button add-button w-100"><i class="fas fa-plus"></i></button>
+        </div>
+        <div class="spt-input col-5">
+          <input type="text" aria-label="new genre" placeholder="Add a new genre">
+        </div>
+        <div class="col-1 pl-0">
+          <button class="spt-button add-button w-100"><i class="fas fa-plus"></i></button>
+        </div>
+        <div class="col-12 mb-2 spt-file-input">
+          <input name="movieFile" id="movie-file-input" type="file" accept="video/mp4">
+          <label class="d-flex" for="movie-file-input">
+            <span class="upload-icon"><i class="fas fa-upload"></i></span>
+            <span id="uploaded-file-name">UPLOAD A MOVIE FILE</span>
+          </label>
+        </div>
+        <div class="col-12 d-flex justify-content-center">
+          <button type="submit" class="spt-button">CREATE MOVIE</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <label for="artwork-file-input" class="movie-cover"></label>
+      <input name="artworkFile" id="artwork-file-input" type="file" accept="image/jpeg">
+    </div>
+  </form>
+</div>
+
+<!-- scripts -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.2/dist/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+<script src="/management/catalogues/movies/createMovie/script.js"></script>
+</body>
+</html>
