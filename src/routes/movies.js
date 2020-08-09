@@ -7,7 +7,7 @@ import {createDecodedData} from '../utils/common.js';
 const ROUTER = express.Router();
 
 function insertActorsInMovieSP(movie, artists) {
-  let artistArray = typeof(artists) === 'object' ? artists : [artists];
+  let artistArray = Array.isArray(artists) ? artists : [artists];
   artistArray.forEach((artist) => {
     let sqlRequest = new sql.Request();
     sqlRequest.input('movie_fk', movie);
@@ -17,7 +17,7 @@ function insertActorsInMovieSP(movie, artists) {
 }
 
 function insertGenresInMovie(movie, genres) {
-  let genresArray = typeof(genres) === 'object' ? genres : [genres];
+  let genresArray = Array.isArray(genres) ? genres : [genres];
   genresArray.forEach((genre) => {
     let sqlRequest = new sql.Request();
     sqlRequest.input('movie_fk', movie);
