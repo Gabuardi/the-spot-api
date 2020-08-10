@@ -65,16 +65,17 @@ function generateMovieTitles(el) {
 }
 
 function replaceTemplate(html, data){
-  let output = html.replace(/%{MOVIEID}%/g, data.movieId)
-  output = output.replace(/{%TITLE%}/g, data.title);
+  let output = html;
+
+  output = output.replace(/{%MOVIEID%}/g, data.movieId);
+  output = output.replace(  /{%TITLE%}/g, data.title);
   output = output.replace(/{%YEAR%}/g, data.releaseYear);
   output = output.replace(/{%LANGUAGE%}/g, data.language);
   output = output.replace(/{%GENRE%}/g, data.genres);
   output = output.replace(/{%CAST%}/g, data.cast);
   output = output.replace(/{%IMAGE%}/g, data.movieId);
-
   return output;
-};
+}
 
 // -------------------------------------------------------
 // ADD NEW MOVIE
@@ -177,7 +178,6 @@ ROUTER.get('/', async (req, res) => {
     let sqlRequest = new sql.Request();
 
     let homeOutput = await readTemplate(`${__dirname}/views/client/movies/index.html`, 'utf-8');
-    let sidebarOutput = await readTemplate(`${__dirname}/views/client/movies/templates/sidebar-movie.html`, 'utf-8');
     let cardOutput = await readTemplate(`${__dirname}/views/client/movies/templates/card-movie.html`, 'utf-8');
     let genresOutput = await readTemplate(`${__dirname}/resources/global/templates/genre-options.html`, 'utf-8');
     let artistsOutput = await readTemplate(`${__dirname}/resources/global/templates/artist-options.html`, 'utf-8');
@@ -190,9 +190,6 @@ ROUTER.get('/', async (req, res) => {
       let movieData = await createDecodedData(data.recordset[0], generateMovie);
 
       let finalData = filteredData(movieData, queryObj);
-
-      sidebarOutput = await finalData.map(el => replaceTemplate(sidebarOutput, el)).join('');
-      homeOutput = await homeOutput.replace('{%SIDEBAR_MOVIE%}', sidebarOutput);
 
       let year = await generateFilterOptions(finalData, 'releaseYear');
       yearsOutput = await year.map(el => yearsOutput.replace(/{%YEAR%}/g, el)).join('');
