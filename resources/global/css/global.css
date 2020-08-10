@@ -27,7 +27,7 @@
   --dark-primary-color: #0a4c2a;
   --dark-base: #1f1f1f;
   --alternative-dark: #323232;
-  --semi-dark-base: #A5A5A5;
+  --semi-dark-base: #dedede;
 }
 
 body {
@@ -158,11 +158,44 @@ nav {
   color: var(--primary-color);
 }
 
+.logged-container {
+  position: relative;
+  display: flex;
+}
+
 .username {
   color: var(--primary-color);
   border: 1px solid var(--primary-color);
   padding: 10px;
   border-radius: 4px;
+  z-index: 1;
+  background-color: #FFF;
+  cursor: pointer;
+}
+
+.username:hover ~ .log-out-button,
+.log-out-button:hover {
+  bottom: -34px;
+  opacity: 1;
+}
+
+.log-out-button {
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  bottom: -8px;
+  opacity: 0;
+  background-color: var(--semi-dark-base);
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease-in;
+}
+
+.log-out-button:hover {
+  color: var(--primary-color);
+  cursor: pointer;
 }
 
 /* --------------------------------------------- */

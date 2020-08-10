@@ -7,6 +7,12 @@ function authCustomer(data) {
     success: (res) => {
       res.type = 2;
       localStorage.setItem('userAccount', JSON.stringify(res));
+      $('#open-login-btn').addClass('d-none');
+      let $usernameSpan = $('#username');
+      $usernameSpan.text(res.firstName);
+      $usernameSpan.removeClass('d-none');
+      $('#signOutbutton').removeClass('d-none');
+      $('#login-modal').modal('hide');
     },
     error: () => {
       $('#login-error').removeClass('d-none');
@@ -15,18 +21,17 @@ function authCustomer(data) {
 }
 
 function createCustomer(data) {
+  let credetianls = {username: data.username, password: data.password};
   $.ajax({
     type: 'POST',
     contentType: 'application/json',
     url: '/customers',
     data: JSON.stringify(data),
     success: (res) => {
-      let credetianls = {username: data.username, password: data.password};
-      console.log(res);
-      authCustomer(credetianls)
+      authCustomer(credetianls);
     },
     error: (res) => {
-      $('#login-error').removeClass('d-none');
+      authCustomer(credetianls);
     }
   });
 }
@@ -36,32 +41,18 @@ function onSignIn(googleUser) {
   let id = profile.getId();
   let email = profile.getEmail();
   let name = profile.getName();
+  let userToken = parseInt(id).toString(36);
 
   let accountData = {
-    username: `G'${id}`,
-    password: id,
+    username: `G${userToken}`,
+    password: userToken,
     firstName: name,
     lastName: '',
     email: email,
     googleAccount: 'yes'
   };
-  createCustomer(accountData);
 
-  $.ajax({
-    type: 'get',
-    contentType: 'application/json',
-    url: `/customers/check/G${id}`,
-    statusCode: {
-      404() {
-        let accountData = {username: `G${id}`, password: id, firstName: name, lastName: '', email: email};
-        createCustomer(accountData);
-      },
-      300() {
-        let credentials = {username: `G${id}`, password: id};
-        authCustomer(credentials);
-      }
-    }
-  });
+  createCustomer(accountData);
 }
 
 

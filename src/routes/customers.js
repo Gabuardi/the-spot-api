@@ -15,6 +15,7 @@ function generateCustomer(el) {
     firstName: decode(el.first_name),
     lastName: decode(el.last_name),
     email: decode(el.email_addr),
+    googleAccount: decode(el.google_account),
     created: dateStringParser(el.date_created)
   }
 }
@@ -60,7 +61,6 @@ ROUTER.get('/:customerId', (request, response) => {
 // -------------------------------------------------------
 ROUTER.post('/', (request, response) => {
   let data = request.body;
-
   let sqlRequest = new sql.Request();
 
   sqlRequest.input('username', encode(data.username));
