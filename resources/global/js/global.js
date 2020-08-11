@@ -68,6 +68,13 @@
         success: (res) => {
           res.type = 2;
           localStorage.setItem('userAccount', JSON.stringify(res));
+          let $usernameSpan = $('#username');
+          $('#open-login-btn').addClass('d-none');
+          $usernameSpan.text(res.username);
+          $usernameSpan.show();
+          $usernameSpan.removeClass('d-none');
+          $('#signOutbutton').removeClass('d-none');
+          $('#login-modal').modal('hide');
         },
         error: (res) => {
           $('#login-error').removeClass('d-none');
@@ -110,23 +117,45 @@
 /* ..............................................
   Filter Url Params Manipulation
   ................................................. */
-  function ifEmpty(param, type, value){
-    if(param === ''){
-      value = `?${type}=${value}`;
-      return value;
-    }else {
-      value = `&${type}=${value}`;
-      return value;
-    };
-  };
+function ifEmpty(param, type, value) {
+  if (param === '') {
+    value = `?${type}=${value}`;
+    return value;
+  } else {
+    value = `&${type}=${value}`;
+    return value;
+  }
+  ;
+};
 
-  function ifDuplicate(){
-    let params = window.location.search;
-    params.cont
-  };
+function ifDuplicate() {
+  let params = window.location.search;
+  params.cont
+};
 
-  function runNewUrl (type, value) {
-    let newUrl = window.location.href;
-    newUrl += `${ifEmpty(window.location.search, type, value)}`;
-    window.location.href = newUrl;
-  };
+function runNewUrl(type, value) {
+  let newUrl = window.location.href;
+  newUrl += `${ifEmpty(window.location.search, type, value)}`;
+  window.location.href = newUrl;
+}
+
+/* ..............................................
+  SIGN OUT BUTTON
+................................................. */
+function signOut() {
+  localStorage.removeItem('userAccount');
+  window.location.reload();
+}
+
+function signOutGoogle() {
+  let auth2 = gapi.auth2.getAuthInstance();
+  auth2.signOut().then();
+}
+
+$('#signOutbutton').click(() => {
+  let user = JSON.parse(localStorage.getItem('userAccount'));
+  if (user && user.type === 2 && user.googleAccount === 'ye') {
+    signOutGoogle();
+  }
+  signOut();
+});

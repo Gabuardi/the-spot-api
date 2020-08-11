@@ -46,6 +46,7 @@ import booksRouter from './routes/books.js';
 import songsRouter from './routes/songs.js';
 import logsRouter from './routes/logs.js';
 import customersRouter from './routes/customers.js';
+import paymentRouter from './routes/payment.js';
 
 APP.use('/', homeRouter);
 APP.use('/management', managementRouter);
@@ -63,6 +64,7 @@ APP.use('/books', booksRouter);
 APP.use('/music', songsRouter);
 APP.use('/logs', logsRouter);
 APP.use('/customers', customersRouter);
+APP.use('/payment', paymentRouter);
 
 APP.use('/avatar', express.static('resources/avatars'));
 APP.use('/movies/artworks/', express.static('resources/movies/artworks/'));
