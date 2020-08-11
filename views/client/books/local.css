@@ -19,8 +19,12 @@
   right: 0;
 }
 
-.sidebar img {
+.sidebar .artwork {
   width: 250px;
+  height: 375px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: top;
 }
 
 .sidebar-info {
@@ -41,9 +45,11 @@
   font-size: 20px;
 }
 
-.sidebar button {
-  margin-bottom: 30px;
+.sidebar a {
+  display: flex;
+  justify-content: center;
   position: absolute;
+  font-size: 24px;
   bottom: 0;
 }
 

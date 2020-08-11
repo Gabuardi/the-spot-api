@@ -38,7 +38,7 @@ function generateSongTitles(el) {
 };
 
 function replaceTemplate(html, data){
-  let output = html.replace(/%{SONGID}%/g, data.songId);
+  let output = html.replace(/{%SONGID%}/g, data.songId);
   output = output.replace(/{%IMAGE%}/g, data.songId);
   output = output.replace(/{%TITLE%}/g, data.title);
   output = output.replace(/{%ARTIST%}/g, data.artists);
@@ -60,7 +60,6 @@ ROUTER.get('/', async (req, res) => {
     let sqlRequest = new sql.Request();
 
     let homeOutput = await readTemplate(`${__dirname}/views/client/music/index.html`, 'utf-8');
-    let sidebarOutput = await readTemplate(`${__dirname}/views/client/music/templates/sidebar-song.html`, 'utf-8');
     let cardOutput = await readTemplate(`${__dirname}/views/client/music/templates/card-song.html`, 'utf-8');
     let artistsOutput = '<option>{%ARTIST%}</option>';
     let genresOutput = '<option>{%GENRE%}</option>';
@@ -74,9 +73,6 @@ ROUTER.get('/', async (req, res) => {
       let songData = await createDecodedData(data.recordset[0], generateSong);
 
       let finalData = filteredData(songData, queryObj);
-
-      sidebarOutput = await finalData.map(el => replaceTemplate(sidebarOutput, el)).join('');
-      homeOutput = await homeOutput.replace('{%SIDEBAR_MUSIC%}', sidebarOutput);
 
       let artists = await filterArrayValues(finalData, 'artists');
       artistsOutput = await artists.map(el => artistsOutput.replace(/{%ARTIST%}/g, el)).join('');

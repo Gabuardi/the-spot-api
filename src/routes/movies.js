@@ -179,10 +179,10 @@ ROUTER.get('/', async (req, res) => {
 
     let homeOutput = await readTemplate(`${__dirname}/views/client/movies/index.html`, 'utf-8');
     let cardOutput = await readTemplate(`${__dirname}/views/client/movies/templates/card-movie.html`, 'utf-8');
-    let genresOutput = await readTemplate(`${__dirname}/resources/global/templates/genre-options.html`, 'utf-8');
-    let artistsOutput = await readTemplate(`${__dirname}/resources/global/templates/artist-options.html`, 'utf-8');
-    let yearsOutput = await readTemplate(`${__dirname}/resources/global/templates/year-options.html`, 'utf-8');
-    let languagesOutput = await readTemplate(`${__dirname}/resources/global/templates/language-options.html`, 'utf-8');
+    let genresOutput = '<option>{%GENRE%}</option>';
+    let artistsOutput = '<option>{%ARTIST%}</option>';
+    let yearsOutput = '<option>{%YEAR%}</option>';
+    let languagesOutput = '<option>{%LANGUAGE%}</option>';
 
     sqlRequest.execute('[usp_movies_get_all]', async (err, data) => {
       if(err) console.log(`ERROR!!! ${err}`);

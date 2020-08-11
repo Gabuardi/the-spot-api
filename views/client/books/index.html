@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>The Spot | Books</title>
+  <title>The Spot | Books</title> 
 
   <!-- external resources -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
@@ -16,7 +16,16 @@
 
   <div class="sidebar-dropdown"></div>
   <div class="sidebar">
-    {%SIDEBAR_BOOK%}
+    <div id="sidebar-artwork" class="artwork"></div>
+    <div class="sidebar-info">
+      <div><strong>Title:</strong> <span id="sidebar-title"></span></div>
+      <div><strong>Author:</strong> <span id="sidebar-author"></span></div>
+      <div><strong>Genre:</strong> <span id="sidebar-genre"></span></div>
+      <div><strong>Editorial:</strong> <span id="sidebar-editorial"></span></div>
+      <div><strong>Year:</strong> <span id="sidebar-year"></span></div>
+      <div><strong>Language:</strong> <span id="sidebar-language"></span></div>
+    </div>
+    <a id="buy-button" href="" class="spt-button w-100">BUY</a>
   </div>
 
   <!-- ---------------------------- -->
@@ -46,12 +55,12 @@
           <input type="text" placeholder="Book Title" aria-label="title">
         </div>
       </div>
-      <div class="col-3">
+      <div class="col-2">
         <select title="Book Author" class="selectpicker" id="select-artist" multiple aria-label="book author">
           {%AUTHORS_OPTION%}
         </select>
       </div>
-      <div class="col-1">
+      <div class="col-2">
         <select title="Genre" class="selectpicker" id="select-genre">
           {%GENRES_OPTION%}
         </select>

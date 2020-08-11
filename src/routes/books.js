@@ -38,7 +38,7 @@ function generateBookTitle(el) {
 };
 
 function replaceTemplate(html, data){
-  let output = html.replace(/%{MOVIEID}%/g, data.bookId);
+  let output = html.replace(/{%BOOKID%}/g, data.bookId);
   output = output.replace(/{%IMAGE%}/g, data.bookId);
   output = output.replace(/{%TITLE%}/g, data.title);
   output = output.replace(/{%AUTHOR%}/g, data.artist);
@@ -60,7 +60,6 @@ ROUTER.get('/', async (req, res) => {
     let sqlRequest = new sql.Request();
 
     let homeOutput = await readTemplate(`${__dirname}/views/client/books/index.html`, 'utf-8');
-    let sidebarOutput = await readTemplate(`${__dirname}/views/client/books/templates/sidebar-book.html`, 'utf-8');
     let cardOutput = await readTemplate(`${__dirname}/views/client/books/templates/card-book.html`, 'utf-8');
     let artistsOutput = '<option>{%AUTHOR%}</option>';
     let genresOutput = '<option>{%GENRE%}</option>';
@@ -74,9 +73,6 @@ ROUTER.get('/', async (req, res) => {
       let bookData = await createDecodedData(data.recordset[0], generateBook);
 
       let finalData = filteredData(bookData, queryObj);
-
-      sidebarOutput = await finalData.map(el => replaceTemplate(sidebarOutput, el)).join('');
-      homeOutput = await homeOutput.replace('{%SIDEBAR_BOOK%}', sidebarOutput);
 
       let authors = await generateFilterOptions(finalData, 'artist');
       artistsOutput = await authors.map(el => artistsOutput.replace(/{%AUTHOR%}/g, el)).join('');

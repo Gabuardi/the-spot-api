@@ -16,7 +16,16 @@
 
   <div class="sidebar-dropdown"></div>
   <div class="sidebar">
-    {%SIDEBAR_MUSIC%}
+    <div id="sidebar-artwork" class="artwork"></div>
+    <div class="sidebar-info">
+      <div><strong>Title:</strong> <span id="sidebar-title"></span></div>
+      <div><strong>Artist:</strong> <span id="sidebar-artist"></span></div>
+      <div><strong>Genre:</strong> <span id="sidebar-genre"></span></div>
+      <div><strong>Album:</strong> <span id="sidebar-album"></span></div>
+      <div><strong>Record Label:</strong> <span id="sidebar-record-label"></span></div>
+      <div><strong>Year:</strong> <span id="sidebar-year"></span></div>
+    </div>
+    <button class="spt-button w-100">BUY</button>
   </div>
 
   <!-- ---------------------------- -->
@@ -46,12 +55,12 @@
           <input type="text" placeholder="Song Title" aria-label="title">
         </div>
       </div>
-      <div class="col-3">
+      <div class="col-2">
         <select title="Song Artist" class="selectpicker" id="select-artist" multiple aria-label="song artist">
           {%ARTISTS_OPTION%}
         </select>
       </div>
-      <div class="col-1">
+      <div class="col-2">
         <select title="Genre" class="selectpicker" id="select-genre">
           {%GENRES_OPTION%}
         </select>
