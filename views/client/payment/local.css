@@ -11,9 +11,15 @@ h4 span {
   border: 1px solid var(--alternative-dark);
 }
 
-.artwork.movies {
+.artwork.movies,
+.artwork.books {
   width: 250px;
   height: 375px;
+}
+
+.artwork.music {
+  width: 250px;
+  height: 250px;
 }
 
 .payment-method-card {

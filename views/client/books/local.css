@@ -32,6 +32,8 @@
   color: #FFF;
   font-size: 20px;
   margin-top: 30px;
+  max-height: 423px;
+  overflow: scroll;
 }
 
 .sidebar-info div {
@@ -68,19 +70,31 @@
   margin: 15px;
   cursor: pointer;
   width: 15.4rem;
-  height: 30rem;
+  height: fit-content;
 }
 
-.resource-card img {
+.resource-card__artwork {
   width: 227px;
+  height: 340px;
+  background-size: cover;
+  background-position: center;
 }
 
 .resource-card__title {
+  width: 227px;
   color: #FFF;
   font-weight: 500;
   margin-top: 10px;
   margin-bottom: 2px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
+
+.resource-card:hover .resource-card__title {
+  white-space: normal;
+}
+
 
 .sidebar-dropdown {
   display: none;
