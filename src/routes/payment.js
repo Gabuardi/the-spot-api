@@ -1,11 +1,8 @@
-import express from 'express';
-import path from 'path';
-import {readTemplate} from "../utils/common.js";
-import sql from 'mssql';
-import {decode} from "../utils/codification.js";
-
-const __dirname = path.resolve();
-const ROUTER = express.Router();
+const ROUTER = require('express').Router();
+const {root} = require('../../root');
+const {readTemplate} = require('../utils/common');
+const sql = require('mssql');
+const {decode} = require('../utils/codification');
 
 function proccessType(data) {
   switch (data.type) {
@@ -24,16 +21,6 @@ function proccessType(data) {
   return data;
 }
 
-async function getProductTitle(data) {
-  let sqlRequest = new sql.Request();
-  sqlRequest.input('id', data.product);
-
-  let responseHandler = (err, result) => {
-    return result.recordset[0].title;
-  };
-
-  sqlRequest.execute(`[usp_${data.type}_get_title]`, responseHandler);
-}
 
 function replaceMovieValues(html, data) {
   let output = html;
@@ -48,21 +35,18 @@ function replaceMovieValues(html, data) {
 // PAGE
 // -------------------------------------------------------
 ROUTER.get('/', async (request, res) => {
-  let page = await readTemplate(`${__dirname}/views/client/payment/index.html`, 'utf-8');
+  let page = await readTemplate(`${root}/views/client/payment/index.html`, 'utf-8');
   let data = request.query;
 
   let sqlRequest = new sql.Request();
   sqlRequest.input('id', data.product);
   sqlRequest.execute(`[usp_${data.type}_get_title]`, (err, result) => {
+    console.log(result);
     data.title = decode( result.recordset[0].title);
     data = proccessType(request.query);
     page = replaceMovieValues(page, data);
     res.status(200).type('text/html').send(page);
   });
-
-
-  // let file = `${__dirname}/resources/movies/media/${movieId}.mp4`;
-  // res.download(file);
 });
 
-export default ROUTER;
+module.exports = ROUTER;

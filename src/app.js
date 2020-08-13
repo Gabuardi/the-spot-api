@@ -29,40 +29,36 @@ APP.listen(PORT, () => console.log(`- || APP RUNNING ||--> http://localhost:${PO
 
 // -----------------------------------------------------------------
 const homeRouter = require('./routes/home');
-// import managementRouter from './routes/management/management.js';
-// import rolesRouter from './routes/roles.js'
-// import staffRouter from './routes/staff.js';
+const managementRouter = require ('./routes/management/management');
+const rolesRouter = require('./routes/roles');
 const consecutivesRouter = require('./routes/consecutives');
-// import languagesRouter from './routes/languages.js';
+const languagesRouter = require('./routes/languages');
 const artistsRouter = require('./routes/artists');
-// import visualGenresRouter from './routes/visualGenres.js';
-// import musicalGenresRouter from './routes/musicalGenres.js';
+const visualGenresRouter = require('./routes/visualGenres');
+const musicalGenresRouter = require('./routes/musicalGenres');
 const editorialsRouter = require('./routes/editorials');
-// import recordLabelsRouter from './routes/recordLabels.js';
-// import moviesRouter from './routes/movies.js';
+const recordLabelsRouter = require('./routes/recordLabels');
+const moviesRouter = require('./routes/movies');
 const booksRouter = require('./routes/books');
-// import songsRouter from './routes/songs.js';
-// import logsRouter from './routes/logs.js';
+const songsRouter = require('./routes/songs');
 const customersRouter = require('./routes/customers');
-// import paymentRouter from './routes/payment.js';
-//
+const paymentRouter = require('./routes/payment');
+
 APP.use('/', homeRouter);
-// APP.use('/management', managementRouter);
-// APP.use('/roles', rolesRouter);
-// APP.use('/staff', staffRouter);
+APP.use('/management', managementRouter);
+APP.use('/roles', rolesRouter);
 APP.use('/consecutives', consecutivesRouter);
-// APP.use('/languages', languagesRouter);
+APP.use('/languages', languagesRouter);
 APP.use('/artists', artistsRouter);
-// APP.use('/visualGenres', visualGenresRouter);
-// APP.use('/musicalGenres', musicalGenresRouter);
+APP.use('/visualGenres', visualGenresRouter);
+APP.use('/musicalGenres', musicalGenresRouter);
 APP.use('/editorials', editorialsRouter);
-// APP.use('/recordLabels', recordLabelsRouter);
-// APP.use('/movies', moviesRouter);
+APP.use('/recordLabels', recordLabelsRouter);
+APP.use('/movies', moviesRouter);
 APP.use('/books', booksRouter);
-// APP.use('/music', songsRouter);
-// APP.use('/logs', logsRouter);
+APP.use('/music', songsRouter);
 APP.use('/customers', customersRouter);
-// APP.use('/payment', paymentRouter);
+APP.use('/payment', paymentRouter);
 
 APP.use('/avatar', express.static('resources/avatars'));
 APP.use('/movies/artworks/', express.static('resources/movies/artworks/'));

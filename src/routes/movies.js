@@ -1,13 +1,9 @@
-import express from 'express';
-import path from 'path';
-import sql from 'mssql';
-import {sqlResponseHandler} from '../utils/handlers.js';
-import {encode, decode} from '../utils/codification.js';
-import {createDecodedData, readTemplate, filteredData, filterArrayValues, generateFilterOptions} from '../utils/common.js';
-
-const __dirname = path.resolve();
-
-const ROUTER = express.Router();
+const ROUTER = require('express').Router();
+const {root} = require('../../root');
+const sql = require('mssql');
+const sqlResponseHandler = require("../utils/handlers.js");
+const {encode, decode} = require('../utils/codification');
+const {createDecodedData, readTemplate, filteredData, filterArrayValues, generateFilterOptions} = require('../utils/common');
 
 function insertActorsInMovieSP(movie, artists) {
   let artistArray = Array.isArray(artists) ? artists : [artists];
@@ -175,8 +171,8 @@ ROUTER.get('/', async (req, res) => {
 
     let sqlRequest = new sql.Request();
 
-    let homeOutput = await readTemplate(`${__dirname}/views/client/movies/index.html`, 'utf-8');
-    let cardOutput = await readTemplate(`${__dirname}/views/client/movies/templates/card-movie.html`, 'utf-8');
+    let homeOutput = await readTemplate(`${root}/views/client/movies/index.html`, 'utf-8');
+    let cardOutput = await readTemplate(`${root}/views/client/movies/templates/card-movie.html`, 'utf-8');
     let genresOutput = '<option>{%GENRE%}</option>';
     let artistsOutput = '<option>{%ARTIST%}</option>';
     let yearsOutput = '<option>{%YEAR%}</option>';
@@ -249,7 +245,7 @@ ROUTER.put('/:movieId', (request, response) => {
 // -------------------------------------------------------
 ROUTER.get('/download/:movieId', (request, response) => {
   let movieId = request.params.movieId;
-  let file = `${__dirname}/resources/movies/media/${movieId}.mp4`;
+  let file = `${root}/resources/movies/media/${movieId}.mp4`;
   response.download(file);
 });
 
@@ -271,10 +267,10 @@ ROUTER.post('/log/:username', (request, response) => {
   sqlRequest.input('language_fk', data.language_fk);
 
   let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, () => esponse.send(`✅ MOVIE log saved`));
+    sqlResponseHandler(err, result, response, () => response.send(`✅ MOVIE log saved`));
   };
 
   sqlRequest.execute('[usp_activity_logs_movie]', responseHandler);
 });
 
-export default ROUTER;
+module.exports = ROUTER;
