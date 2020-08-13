@@ -21,7 +21,7 @@
 
 .sidebar .artwork {
   width: 250px;
-  height: 375px;
+  height: 250px;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: top;
@@ -30,7 +30,7 @@
 .sidebar-info {
   width: 80%;
   color: #FFF;
-  font-size: 20px;
+  font-size: 18px;
   margin-top: 30px;
 }
 

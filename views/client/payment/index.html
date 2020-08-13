@@ -22,10 +22,10 @@
   <h1 class="text-center mb-5">CHECKOUT</h1>
   <div class="row">
     <div class="col-4 offset-1 d-flex flex-column">
-      <div class="artwork movies" style="background-image: url('client/payment/MOV-26.jpg')"></div>
-      <h4 class="mb-2">Product Type: <span>Movie</span></h4>
-      <h4 class="mb-2">Product Code: <span>MV-01</span></h4>
-      <h4 class="mb-2">Product Name: <span>Deadpool 2</span></h4>
+      <div class="artwork {%RESOURCES%}" style="background-image: url('{%RESOURCES%}/artworks/{%PRODUCT%}.jpg')"></div>
+      <h4 class="mb-2">Product Type: <span>{%TYPE%}</span></h4>
+      <h4 class="mb-2">Product Code: <span>{%PRODUCT%}</span></h4>
+      <h4 class="mb-2">Product Title: <span>{%TITLE%}</span></h4>
       <h3 class="mt-5">Price: <span>$10</span></h3>
     </div>
     <div class="col-6 pl-5 border-left">
@@ -39,14 +39,14 @@
         </div>
       </div>
       <!-- CREDIT CARD -->
-      <form id="credit-card-form" class="row d-none">
+      <form id="credit-card-form" class="row d-none" data-download="/{%RESOURCES%}/download/{%PRODUCT%}">
         <div class="spt-input col-12 mb-3">
           <label>Card Number</label>
-          <input type="text" aria-label="card number" placeholder="Enter a card number">
+          <input type="text" name="cardNumber" aria-label="card number" placeholder="Enter a card number" maxlength="16">
         </div>
         <div class="spt-input col-6 mb-3">
           <label>Expiration Month</label>
-          <select name="expMonth" title="Expiration month" class="selectpicker" multiple aria-label="expiration month">
+          <select name="expMonth" title="Expiration month" class="selectpicker" aria-label="expiration month">
             <option>Jan</option>
             <option>Feb</option>
             <option>Mar</option>
@@ -62,7 +62,7 @@
         </div>
         <div class="spt-input col-6 mb-3">
           <label>Expiration Year</label>
-          <select name="expYear" title="Expiration year" class="selectpicker" multiple aria-label="expiration year">
+          <select name="expYear" title="Expiration year" class="selectpicker" aria-label="expiration year">
             <option>2020</option>
             <option>2021</option>
             <option>2022</option>
@@ -71,14 +71,14 @@
         </div>
         <div class="spt-input col-6 mb-3">
           <label>Card Provider</label>
-          <select name="cardProvider" title="Card provider" class="selectpicker" multiple aria-label="card provider">
+          <select name="cardProvider" title="Card provider" class="selectpicker" aria-label="card provider">
             <option>Visa</option>
             <option>MasterCard</option>
           </select>
         </div>
         <div class="spt-input col-6 mb-3">
           <label>CVV Number</label>
-          <input type="text" aria-label="cvv" placeholder="Enter a CVV">
+          <input name="cvv" type="text" aria-label="cvv" placeholder="Enter a CVV" maxlength="4">
         </div>
         <div class="col-12 mb-10">
           <label class="spt-cb">Save credit card
@@ -87,25 +87,25 @@
           </label>
         </div>
         <div class="col-12 mt-3">
-          <button class="spt-button w-100">PAY</button>
+          <button type="submit" class="spt-button w-100">PAY</button>
         </div>
       </form>
       <!-- EASYPAY -->
-      <form id="easypay-form" class="row d-none">
+      <form id="easypay-form" class="row d-none" data-download="/{%RESOURCES%}/download/{%PRODUCT%}">
         <div class="spt-input col-12 mb-3">
           <label>Easy PayAccount Number</label>
-          <input type="text" aria-label="account number" placeholder="Enter an account number">
+          <input name="accountNumber" type="text" aria-label="account number" placeholder="Enter an account number">
         </div>
         <div class="spt-input col-5 mb-3">
           <label>Security Code</label>
-          <input type="text" aria-label="security code" placeholder="Enter a security code">
+          <input name="securityCode" type="text" aria-label="security code" placeholder="Enter a security code">
         </div>
         <div class="spt-input col-7 mb-3">
           <label>EasyPay Password</label>
-          <input type="password" aria-label="password" placeholder="Enter password">
+          <input name="password" type="password" aria-label="password" placeholder="Enter password">
         </div>
         <div class="col-12 mt-3">
-          <button class="spt-button w-100">PAY</button>
+          <button type="submit" class="spt-button w-100">PAY</button>
         </div>
       </form>
     </div>
@@ -116,6 +116,7 @@
 
 <!-- scripts -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.2/dist/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
