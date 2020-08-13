@@ -124,22 +124,6 @@ ROUTER.get('/all', (request, response) => {
 });
 
 // -------------------------------------------------------
-// GET ALL SONG TITLES
-// -------------------------------------------------------
-ROUTER.get('/titles', (request, response) => {
-  let sqlRequest = new sql.Request();
-
-  let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, (response, result) => {
-      let decoded = createDecodedData(result.recordset, generateSongTitles);
-      response.json(decoded);
-    });
-  };
-
-  sqlRequest.execute('[usp_songs_get_titles]', responseHandler);
-});
-
-// -------------------------------------------------------
 // ADD NEW SONG
 // -------------------------------------------------------
 ROUTER.post('/', (request, response) => {

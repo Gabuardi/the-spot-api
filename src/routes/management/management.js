@@ -16,9 +16,13 @@ ROUTER.get('/', async (request, res) => {
 // MANAGEMENT INDEX
 // -------------------------------------------------------
 const managementMoviesRouter = require('./movies');
+const managementMusicRouter = require('./music');
+const managementBooksRouter = require('./books');
 const managementStaffRouter = require('./staff');
 
-ROUTER.use('/movies', managementMoviesRouter);
 ROUTER.use('/staff', managementStaffRouter);
+ROUTER.use('/movies', managementMoviesRouter);
+ROUTER.use('/music', managementMusicRouter);
+ROUTER.use('/books', managementBooksRouter);
 
 module.exports = ROUTER;
