@@ -42,4 +42,22 @@
         let selected = $(this).val();
         runNewUrl('releaseYear', selected);
     });
+
+    window.onload = () => {
+        let param = window.location.search.substring(1);
+            
+        if(param !== ''){
+            setValuesOnLoad('#select-artist', '#select-artist option', param);
+
+            setValuesOnLoad('#select-genre', '#select-genre option', param);
+
+            setValuesOnLoad('#select-album', '#select-album option', param);
+
+            setValuesOnLoad('#select-record-label', '#select-record-label option', param);
+
+            setValuesOnLoad('#select-year', '#select-year option', param);
+        }else {
+            console.log('No filter has been applied');
+        };
+    }
 })(jQuery)

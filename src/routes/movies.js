@@ -68,7 +68,7 @@ function replaceTemplate(html, data){
   let output = html;
 
   output = output.replace(/{%MOVIEID%}/g, data.movieId);
-  output = output.replace(  /{%TITLE%}/g, data.title);
+  output = output.replace(/{%TITLE%}/g, data.title);
   output = output.replace(/{%YEAR%}/g, data.releaseYear);
   output = output.replace(/{%LANGUAGE%}/g, data.language);
   output = output.replace(/{%GENRE%}/g, data.genres);

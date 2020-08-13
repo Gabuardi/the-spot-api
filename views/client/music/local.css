@@ -82,6 +82,12 @@
   margin-bottom: 2px;
 }
 
+.resource-card__artist {
+  color: #FFF;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
 .sidebar-dropdown {
   display: none;
   z-index: 1;

@@ -216,6 +216,14 @@ nav {
   background-color: #FFF;
 }
 
+.page-sub-header:hover {
+  text-decoration: none;
+}
+
+.page-sub-header > h2:hover {
+  color: #02d484;
+}
+
 /* -------------------------------- */
 /* BUTTONS */
 /* -------------------------------- */

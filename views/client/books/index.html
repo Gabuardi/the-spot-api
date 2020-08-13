@@ -47,7 +47,7 @@
   <!-- ---------------------------- -->
   <div class="alternative-dark-background py-3 px-5 d-flex">
     <div class="filter-bar-logo d-flex justify-content-center mr-5">
-      <a href="/books"><h2>BOOKS <i class="fas fa-book"></i></h2></a>
+      <a href="/books" class="page-sub-header"><h2>BOOKS <i class="fas fa-book"></i></h2></a>
     </div>
     <div class="row d-flex flex-grow-1 ml-5">
       <div class="col-3">
@@ -56,12 +56,12 @@
         </div>
       </div>
       <div class="col-2">
-        <select title="Book Author" class="selectpicker" id="select-artist" multiple aria-label="book author">
-          {%AUTHORS_OPTION%}
+        <select title="Book Author" class="selectpicker" id="select-artist" aria-label="book author">
+          {%AUTHORS_OPTION%} 
         </select>
       </div>
       <div class="col-2">
-        <select title="Genre" class="selectpicker" id="select-genre">
+        <select title="Genre" class="selectpicker" id="select-genre" multiple aria-label="genre">
           {%GENRES_OPTION%}
         </select>
       </div>
