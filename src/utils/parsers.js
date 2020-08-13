@@ -4,4 +4,4 @@ function dateStringParser(sqlDate) {
   return `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}`
 }
 
-export {dateStringParser}
+module.exports = dateStringParser;

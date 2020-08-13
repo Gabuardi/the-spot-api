@@ -22,9 +22,5 @@
   "devDependencies": {
     "nodemon": "^2.0.4",
     "randomstring": "^1.1.5"
-  },
-  "engines": {
-    "node": ">=14.5.0"
-  },
-  "type": "module"
+  }
 }

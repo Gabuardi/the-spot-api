@@ -1,8 +1,8 @@
-import express from 'express';
-import sql from 'mssql';
-import {createDecodedData} from '../utils/common.js';
-import {encode, decode} from '../utils/codification.js';
-import {sqlResponseHandler} from "../utils/handlers.js";
+const express = require('express');
+const sql = require('mssql');
+const {createDecodedData} = require('../utils/common.js');
+const {encode, decode} = require('../utils/codification');
+const sqlResponseHandler = require("../utils/handlers.js");
 
 const ROUTER = express.Router();
 
@@ -11,14 +11,14 @@ function generateLanguage(el) {
     languageId: el.language_id,
     language: decode(el.language)
   }
-};
+}
 
 // -------------------------------------------------------
 // GET ALL LANGUAGES
 // -------------------------------------------------------
 ROUTER.get('/', (request, response) => {
   let sqlRequest = new sql.Request();
-  
+
   let responseHandler = (err, result) => {
     sqlResponseHandler(err, result, response, (response, result) => {
       let decoded = createDecodedData(result.recordset, generateLanguage);
@@ -46,4 +46,4 @@ ROUTER.post('/', (request, response) => {
   sqlRequest.execute('[usp_languages_insert]', responseHandler);
 });
 
-export default ROUTER;
+module.exports = ROUTER;

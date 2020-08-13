@@ -1,9 +1,9 @@
-import express from 'express';
-import sql from 'mssql';
-import {createDecodedData} from '../utils/common.js';
-import {encode, decode} from "../utils/codification.js";
-import {dateStringParser} from "../utils/parsers.js";
-import {sqlResponseHandler} from "../utils/handlers.js";
+const express = require('express');
+const sql = require('mssql');
+const {createDecodedData} = require('../utils/common.js');
+const {encode, decode} = require('../utils/codification.js');
+const dateStringParser = require("../utils/parsers.js");
+const sqlResponseHandler = require("../utils/handlers.js");
 
 const ROUTER = express.Router();
 
@@ -128,4 +128,4 @@ ROUTER.post('/authenticate', (request, response) => {
   });
 });
 
-export default ROUTER;
+module.exports = ROUTER;

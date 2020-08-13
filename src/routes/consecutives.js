@@ -1,8 +1,8 @@
-import express from 'express';
-import sql from 'mssql';
-import {createDecodedData} from '../utils/common.js';
-import {encode, decode} from '../utils/codification.js';
-import {sqlResponseHandler} from "../utils/handlers.js";
+const express = require('express');
+const sql = require('mssql');
+const {createDecodedData} = require('../utils/common.js');
+const {encode, decode} = require('../utils/codification.js');
+const sqlResponseHandler = require("../utils/handlers.js");
 
 const ROUTER = express.Router();
 
@@ -10,16 +10,16 @@ function generateConsecutive(el) {
   return {
     consecutiveTypeId: el.consecutive_type_id,
     description: decode(el.description),
-    consecutiveFk: el.consecutive_fk 
+    consecutiveFk: el.consecutive_fk
   }
-};
+}
 
 // -------------------------------------------------------
 // CREATE NEW CONSECUTIVE TYPE
 // -------------------------------------------------------
 ROUTER.post('/types', (request, response) => {
   let data = request.body;
-  
+
   let sqlRequest = new sql.Request();
 
   sqlRequest.input('description', encode(data.description));
@@ -37,7 +37,7 @@ ROUTER.post('/types', (request, response) => {
 // -------------------------------------------------------
 ROUTER.get('/types', (request, response) => {
   let sqlRequest = new sql.Request();
-  
+
   let responseHandler = (err, result) => {
     sqlResponseHandler(err, result, response, (response, result) => {
       let decoded = createDecodedData(result.recordset, generateConsecutive);
@@ -76,7 +76,7 @@ ROUTER.get('/', (request, response) => {
     sqlResponseHandler(err, result, response, (response, result) => response.json(result.recordset));
   };
 
-  sqlRequest.execute('[usp_consecutives_get_all]', responseHandler);  
+  sqlRequest.execute('[usp_consecutives_get_all]', responseHandler);
 });
 
 // -------------------------------------------------------
@@ -96,8 +96,8 @@ ROUTER.put('/:consecutiveId', (request, response) => {
   let responseHandler = (err, result) => {
     sqlResponseHandler(err, result, response, () => response.send(`✅ Consecutive updated`));
   };
-  
+
   sqlRequest.execute('[usp_consecutives_update]', responseHandler);
 });
 
-export default ROUTER;
+module.exports = ROUTER;

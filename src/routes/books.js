@@ -1,12 +1,9 @@
-import express from 'express';
-import path from 'path';
-import fs from 'fs';
-import sql from 'mssql';
-import {encode, decode} from '../utils/codification.js';
-import {sqlResponseHandler} from "../utils/handlers.js";
-import {createDecodedData, readTemplate, filteredData, filterArrayValues, generateFilterOptions} from '../utils/common.js';
-
-const __dirname = path.resolve();
+const express = require('express');
+const {root} = require('../../root');
+const sql = require('mssql');
+const {encode, decode} = require('../utils/codification');
+const sqlResponseHandler = require('../utils/handlers');
+const {createDecodedData, readTemplate, filteredData, filterArrayValues, generateFilterOptions} = require('../utils/common');
 
 const ROUTER = express.Router();
 
@@ -28,14 +25,14 @@ function generateBook(el) {
     editorial: decode(el.editorial),
     genres: parseGenres(el.genres)
   }
-};
+}
 
 function generateBookTitle(el) {
   return {
     bookId: el.book_id,
     title: decode(el.title)
   }
-};
+}
 
 function replaceTemplate(html, data){
   let output = html.replace(/{%BOOKID%}/g, data.bookId);
@@ -46,9 +43,9 @@ function replaceTemplate(html, data){
   output = output.replace(/{%EDITORIAL%}/g, data.editorial);
   output = output.replace(/{%YEAR%}/g, data.releaseYear);
   output = output.replace(/{%LANGUAGE%}/g, data.language);
-  
+
   return output;
-};
+}
 
 // -------------------------------------------------------
 // BOOK HOME PAGE
@@ -59,8 +56,8 @@ ROUTER.get('/', async (req, res) => {
 
     let sqlRequest = new sql.Request();
 
-    let homeOutput = await readTemplate(`${__dirname}/views/client/books/index.html`, 'utf-8');
-    let cardOutput = await readTemplate(`${__dirname}/views/client/books/templates/card-book.html`, 'utf-8');
+    let homeOutput = await readTemplate(`${root}/views/client/books/index.html`, 'utf-8');
+    let cardOutput = await readTemplate(`${root}/views/client/books/templates/card-book.html`, 'utf-8');
     let artistsOutput = '<option>{%AUTHOR%}</option>';
     let genresOutput = '<option>{%GENRE%}</option>';
     let editorialsOutput = '<option>{%EDITORIAL%}</option>';
@@ -238,4 +235,4 @@ ROUTER.post('/log/:username', (request, response) => {
   sqlRequest.execute('[usp_activity_logs_book]', responseHandler);
 });
 
-export default ROUTER;
+module.exports = ROUTER;

@@ -1,16 +1,15 @@
-import express from 'express';
-import path from 'path';
-import {readTemplate} from "../utils/common.js";
+const express = require('express');
+const {root} = require('../../root');
+const {readTemplate} = require('../utils/common');
 
-const __dirname = path.resolve();
 const ROUTER = express.Router();
 
 // -------------------------------------------------------
 // HOME PAGE
 // -------------------------------------------------------
 ROUTER.get('/', async (request, res) => {
-  let homeOutput = await readTemplate(`${__dirname}/views/client/home/index.html`, 'utf-8');
+  let homeOutput = await readTemplate(`${root}/views/client/home/index.html`, 'utf-8');
   res.status(200).type('text/html').send(homeOutput);
 });
 
-export default ROUTER;
+module.exports = ROUTER;
