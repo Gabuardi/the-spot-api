@@ -1,6 +1,5 @@
 import express from 'express';
 import path from 'path';
-import fs from 'fs';
 import sql from 'mssql';
 import {sqlResponseHandler} from '../utils/handlers.js';
 import {encode, decode} from '../utils/codification.js';
@@ -66,7 +65,6 @@ function generateMovieTitles(el) {
 
 function replaceTemplate(html, data){
   let output = html;
-
   output = output.replace(/{%MOVIEID%}/g, data.movieId);
   output = output.replace(/{%TITLE%}/g, data.title);
   output = output.replace(/{%YEAR%}/g, data.releaseYear);
@@ -226,22 +224,6 @@ ROUTER.get('/', async (req, res) => {
 });
 
 // -------------------------------------------------------
-// GET ALL MOVIE TITLES
-// -------------------------------------------------------
-ROUTER.get('/titles', (request, response) => {
-  let sqlRequest = new sql.Request();
-
-  let responseHandler = (err, result) => {
-    sqlResponseHandler(err, result, response, (response, result) => {
-      let decoded = createDecodedData(result.recordset, generateMovieTitles);
-      response.json(decoded);
-    });
-  };
-
-  sqlRequest.execute('[usp_movies_get_titles]', responseHandler);
-});
-
-// -------------------------------------------------------
 // UPDATE MOVIE
 // -------------------------------------------------------
 ROUTER.put('/:movieId', (request, response) => {
@@ -260,6 +242,15 @@ ROUTER.put('/:movieId', (request, response) => {
   };
 
   sqlRequest.execute('[usp_movies_update]', responseHandler);
+});
+
+// -------------------------------------------------------
+// DOWNLOAD MOVIE
+// -------------------------------------------------------
+ROUTER.get('/download/:movieId', (request, response) => {
+  let movieId = request.params.movieId;
+  let file = `${__dirname}/resources/movies/media/${movieId}.mp4`;
+  response.download(file);
 });
 
 // -------------------------------------------------------
