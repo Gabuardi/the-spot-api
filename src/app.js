@@ -34,7 +34,7 @@ APP.listen(PORT, () => console.log(`- || APP RUNNING ||--> http://localhost:${PO
 // import staffRouter from './routes/staff.js';
 // import consecutivesRouter from './routes/consecutives.js';
 // import languagesRouter from './routes/languages.js';
-// import artistsRouter from './routes/artists.js';
+const artistsRouter = require('./routes/artists');
 // import visualGenresRouter from './routes/visualGenres.js';
 // import musicalGenresRouter from './routes/musicalGenres.js';
 // import editorialsRouter from './routes/editorials.js';
@@ -52,7 +52,7 @@ APP.listen(PORT, () => console.log(`- || APP RUNNING ||--> http://localhost:${PO
 // APP.use('/staff', staffRouter);
 // APP.use('/consecutives', consecutivesRouter);
 // APP.use('/languages', languagesRouter);
-// APP.use('/artists', artistsRouter);
+APP.use('/artists', artistsRouter);
 // APP.use('/visualGenres', visualGenresRouter);
 // APP.use('/musicalGenres', musicalGenresRouter);
 // APP.use('/editorials', editorialsRouter);

@@ -1,10 +1,8 @@
-const express = require('express');
+const ROUTER = require('express').Router();
 const sql = require('mssql');
-const createDecodedData = require('../utils/common');
+const {createDecodedData} = require('../utils/common');
 const {encode, decode} = require('../utils/codification');
 const sqlResponseHandler = require('../utils/handlers');
-
-const ROUTER = express.Router();
 
 function generateArtist(el) {
   return {
@@ -65,4 +63,4 @@ ROUTER.put('/update/:artistId', (request, response) => {
   sqlRequest.execute('[usp_artists_update]', responseHandler);
 });
 
-exports.module = ROUTER;
+module.exports = ROUTER;
