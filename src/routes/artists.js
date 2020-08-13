@@ -1,10 +1,8 @@
 const express = require('express');
 const sql = require('mssql');
-
-
-import {createDecodedData} from '../utils/common.js';
-import {encode, decode} from '../utils/codification.js';
-import {sqlResponseHandler} from "../utils/handlers.js";
+const createDecodedData = require('../utils/common');
+const {encode, decode} = require('../utils/codification');
+const sqlResponseHandler = require('../utils/handlers');
 
 const ROUTER = express.Router();
 

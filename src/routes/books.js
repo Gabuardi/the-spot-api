@@ -1,10 +1,9 @@
-import express from 'express';
-import path from 'path';
-import fs from 'fs';
-import sql from 'mssql';
-import {encode, decode} from '../utils/codification.js';
-import {sqlResponseHandler} from "../utils/handlers.js";
-import {createDecodedData, readTemplate, filteredData, filterArrayValues, generateFilterOptions} from '../utils/common.js';
+const express = require('express');
+const path = require('path');
+const sql = require('mssql');
+const {encode, decode} = require('../utils/codification');
+const sqlResponseHandler = require('../utils/handlers');
+const {createDecodedData, readTemplate, filteredData, filterArrayValues, generateFilterOptions} = require('../utils/common');
 
 const __dirname = path.resolve();
 
@@ -46,7 +45,7 @@ function replaceTemplate(html, data){
   output = output.replace(/{%EDITORIAL%}/g, data.editorial);
   output = output.replace(/{%YEAR%}/g, data.releaseYear);
   output = output.replace(/{%LANGUAGE%}/g, data.language);
-  
+
   return output;
 };
 
@@ -238,4 +237,4 @@ ROUTER.post('/log/:username', (request, response) => {
   sqlRequest.execute('[usp_activity_logs_book]', responseHandler);
 });
 
-export default ROUTER;
+module.exports = ROUTER;
