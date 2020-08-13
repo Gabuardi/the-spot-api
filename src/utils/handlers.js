@@ -6,4 +6,4 @@ function sqlResponseHandler(err, result, response, successCallback) {
   }
 }
 
-export {sqlResponseHandler}
+module.exports = sqlResponseHandler;

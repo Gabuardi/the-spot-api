@@ -1,4 +1,4 @@
-import fs from "fs";
+const fs = require('fs');
 
 // GIVEN A ENCODED DATA WILL GENERATE AN ARRAY PARSING THE ORIGINAL VALUE WITH THE GIVEN OBJECT
 function createDecodedData(encodedData, objectGenerator) {
@@ -70,4 +70,4 @@ function generateFilterOptions (data, type){
   return ifDuplicate(values);
 }
 
-export {createDecodedData, readTemplate, filteredData, filterArrayValues, generateFilterOptions}
+module.exports = {createDecodedData, readTemplate, filteredData, filterArrayValues, generateFilterOptions};

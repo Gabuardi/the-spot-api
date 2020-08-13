@@ -1,5 +1,7 @@
-import express from 'express';
-import sql from 'mssql';
+const express = require('express');
+const sql = require('mssql');
+
+
 import {createDecodedData} from '../utils/common.js';
 import {encode, decode} from '../utils/codification.js';
 import {sqlResponseHandler} from "../utils/handlers.js";
@@ -11,20 +13,20 @@ function generateArtist(el) {
     artistId: el.artist_id,
     fullName: decode(el.full_name)
   }
-}; 
+}
 
 // -------------------------------------------------------
 // GET ALL ARTISTS
 // -------------------------------------------------------
 ROUTER.get('/', (request, response) => {
   let sqlRequest = new sql.Request();
-  
+
   let responseHandler = (err, result) => {
     sqlResponseHandler(err, result, response, (response, result) => {
       let decoded = createDecodedData(result.recordset, generateArtist);
       response.json(decoded);
     });
-  }
+  };
 
   sqlRequest.execute('[usp_artists_get_all]', responseHandler);
 });
@@ -34,11 +36,11 @@ ROUTER.get('/', (request, response) => {
 // -------------------------------------------------------
 ROUTER.post('/', (request, response) => {
   let data = request.body;
-  
+
   let sqlRequest = new sql.Request();
 
   sqlRequest.input('full_name', encode(data.fullName));
-  
+
   let responseHandler = (err, result) => {
     sqlResponseHandler(err, result, response, () => response.send(`✅ Artist -> ${data.fullName} has been added`));
   };
@@ -65,4 +67,4 @@ ROUTER.put('/update/:artistId', (request, response) => {
   sqlRequest.execute('[usp_artists_update]', responseHandler);
 });
 
-export default ROUTER;
+exports.module = ROUTER;
