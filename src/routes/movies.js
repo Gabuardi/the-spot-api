@@ -52,11 +52,11 @@ function generateMovie(el) {
   }
 }
 
-function generateMovieTitles(el) {
-  return {
-    movieId: el.movie_id,
-    title: encode(el.title)
-  }
+function filterByArray(dataSet, filterValueArray) {
+
+}
+
+function filterMoviesList() {
 }
 
 function replaceTemplate(html, data){
@@ -185,22 +185,22 @@ ROUTER.get('/', async (req, res) => {
 
       let finalData = filteredData(movieData, queryObj);
 
-      let year = await generateFilterOptions(finalData, 'releaseYear');
+      let year = await generateFilterOptions(movieData, 'releaseYear');
       yearsOutput = await year.map(el => yearsOutput.replace(/{%YEAR%}/g, el)).join('');
       homeOutput = await homeOutput.replace('{%YEAR_OPTION%}', yearsOutput);
 
-      let language = await generateFilterOptions(finalData, 'language');
+      let language = await generateFilterOptions(movieData, 'language');
       languagesOutput = await language.map(el => languagesOutput.replace(/{%LANGUAGE%}/g, el)).join('');
       homeOutput = await homeOutput.replace('{%LANGUAGE_OPTION%}', languagesOutput);
 
       cardOutput = await finalData.map(el => replaceTemplate(cardOutput, el)).join('');
       homeOutput = await homeOutput.replace('{%MOVIE_CARD%}', cardOutput);
 
-      let artists = await filterArrayValues(finalData, 'cast');
+      let artists = await filterArrayValues(movieData, 'cast');
       artistsOutput = await artists.map(el => artistsOutput.replace(/{%ARTIST%}/g, el)).join('');
       homeOutput = await homeOutput.replace('{%CAST_OPTION%}', artistsOutput);
 
-      let genres = await filterArrayValues(finalData, 'genres');
+      let genres = await filterArrayValues(movieData, 'genres');
       genresOutput = await genres.map(el => genresOutput.replace(/{%GENRE%}/g, el)).join('');
       homeOutput = await homeOutput.replace('{%GENRES_OPTION%}', genresOutput);
 
