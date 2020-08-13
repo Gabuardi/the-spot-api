@@ -46,7 +46,7 @@
         type: 'POST',
         crossDomain: true,
         contentType: 'application/json',
-        url: 'http://localhost:3000/staff/authenticate',
+        url: '/management/staff/authenticate',
         data: data,
         success: (res) => {
           res.type = 1;
@@ -157,7 +157,7 @@ function generateParamArray(param) {
   param = param.replaceAll('%20', ' ').split('&');
 
   param.forEach(el => {
-    paramArray.push(el.split('=')) 
+    paramArray.push(el.split('='))
   });
 
   return paramArray
@@ -169,7 +169,7 @@ function generateParamArray(param) {
 function generateParamObject(param) {
   let paramArray = generateParamArray(param);
   let paramObject = {};
-  
+
   paramArray.forEach(el => {
     Reflect.set(paramObject, el[0], el[1]);
   });
