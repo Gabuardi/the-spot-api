@@ -6,6 +6,7 @@
 
   <!-- external resources -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
   <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/solid.js" integrity="sha384-4RG3cEPIlCBy6VNzxM9ZoEwZW+65ed5JDOfaJAnQqwV6ha/jZDJTXjFmvjFM4bk4" crossorigin="anonymous"></script>
   <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/fontawesome.js" integrity="sha384-DNo9bmYZCHLtp0n0l0XA2UsoRHX1nx38aRP+p9yoP5A8kVTfeWG3aySMOq5FD/v3" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="/global/css/global.css">
@@ -20,14 +21,93 @@
 <div class="container d-flex flex-column align-items-stretch">
   <h1 class="text-center mb-5">CHECKOUT</h1>
   <div class="row">
-    <div class="col-6">
-      <h3 class="mb-5">Product Type: <span>MV-01</span></h3>
-      <h3 class="mb-5">Product Code: <span>MV-01</span></h3>
-      <h3 class="mb-5">Product Name: <span>Leoanrd</span></h3>
+    <div class="col-4 offset-1 d-flex flex-column">
+      <div class="artwork {%RESOURCES%}" style="background-image: url('{%RESOURCES%}/artworks/{%PRODUCT%}.jpg')"></div>
+      <h4 class="mb-2">Product Type: <span>{%TYPE%}</span></h4>
+      <h4 class="mb-2">Product Code: <span>{%PRODUCT%}</span></h4>
+      <h4 class="mb-2">Product Title: <br><span>{%TITLE%}</span></h4>
       <h3 class="mt-5">Price: <span>$10</span></h3>
     </div>
-    <div class="col-6">
-
+    <div class="col-6 pl-5 border-left">
+      <h3>Payment Method:</h3>
+      <div class="row mb-5">
+        <div class="col-6">
+          <div class="payment-method-card" data-form="credit-card">Credit Card</div>
+        </div>
+        <div class="col-6">
+          <div class="payment-method-card" data-form="easypay">EasyPay</div>
+        </div>
+      </div>
+      <!-- CREDIT CARD -->
+      <form id="credit-card-form" class="row d-none" data-download="/{%RESOURCES%}/download/{%PRODUCT%}">
+        <div class="spt-input col-12 mb-3">
+          <label>Card Number</label>
+          <input type="text" name="cardNumber" aria-label="card number" placeholder="Enter a card number" maxlength="16">
+        </div>
+        <div class="spt-input col-6 mb-3">
+          <label>Expiration Month</label>
+          <select name="expMonth" title="Expiration month" class="selectpicker" aria-label="expiration month">
+            <option>Jan</option>
+            <option>Feb</option>
+            <option>Mar</option>
+            <option>Apr</option>
+            <option>Jun</option>
+            <option>Jul</option>
+            <option>Ago</option>
+            <option>Sep</option>
+            <option>Oct</option>
+            <option>Nov</option>
+            <option>Dec</option>
+          </select>
+        </div>
+        <div class="spt-input col-6 mb-3">
+          <label>Expiration Year</label>
+          <select name="expYear" title="Expiration year" class="selectpicker" aria-label="expiration year">
+            <option>2020</option>
+            <option>2021</option>
+            <option>2022</option>
+            <option>2023</option>
+          </select>
+        </div>
+        <div class="spt-input col-6 mb-3">
+          <label>Card Provider</label>
+          <select name="cardProvider" title="Card provider" class="selectpicker" aria-label="card provider">
+            <option>Visa</option>
+            <option>MasterCard</option>
+          </select>
+        </div>
+        <div class="spt-input col-6 mb-3">
+          <label>CVV Number</label>
+          <input name="cvv" type="text" aria-label="cvv" placeholder="Enter a CVV" maxlength="4">
+        </div>
+        <div class="col-12 mb-10">
+          <label class="spt-cb">Save credit card
+            <input type="checkbox" checked="checked">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        <div class="col-12 mt-3">
+          <button type="submit" class="spt-button w-100">PAY</button>
+        </div>
+      </form>
+      <!-- EASYPAY -->
+      <form id="easypay-form" class="row d-none" data-download="/{%RESOURCES%}/download/{%PRODUCT%}">
+        <div class="spt-input col-12 mb-3">
+          <label>Easy PayAccount Number</label>
+          <input name="accountNumber" type="text" aria-label="account number" placeholder="Enter an account number">
+        </div>
+        <div class="spt-input col-5 mb-3">
+          <label>Security Code</label>
+          <input name="securityCode" type="text" aria-label="security code" placeholder="Enter a security code">
+        </div>
+        <div class="spt-input col-7 mb-3">
+          <label>EasyPay Password</label>
+          <input name="password" type="password" aria-label="password" placeholder="Enter password">
+        </div>
+        <div class="col-12 mt-3">
+          <button type="submit" class="spt-button w-100">PAY</button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -36,8 +116,10 @@
 
 <!-- scripts -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.2/dist/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-<script src="payment/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+<script src="client/payment/script.js"></script>
 </body>
 </html>

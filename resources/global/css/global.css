@@ -390,6 +390,7 @@ nav {
 .error, .custom-error {
   font-weight: 400;
   color: #d82f2a;
+  margin: 0;
 }
 
 /* --------------------------------------------- */
