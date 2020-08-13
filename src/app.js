@@ -28,40 +28,40 @@ APP.listen(PORT, () => console.log(`- || APP RUNNING ||--> http://localhost:${PO
 
 
 // -----------------------------------------------------------------
-// import homeRouter from './routes/home.js';
+const homeRouter = require('./routes/home');
 // import managementRouter from './routes/management/management.js';
 // import rolesRouter from './routes/roles.js'
 // import staffRouter from './routes/staff.js';
-// import consecutivesRouter from './routes/consecutives.js';
+const consecutivesRouter = require('./routes/consecutives');
 // import languagesRouter from './routes/languages.js';
 const artistsRouter = require('./routes/artists');
 // import visualGenresRouter from './routes/visualGenres.js';
 // import musicalGenresRouter from './routes/musicalGenres.js';
-// import editorialsRouter from './routes/editorials.js';
+const editorialsRouter = require('./routes/editorials');
 // import recordLabelsRouter from './routes/recordLabels.js';
 // import moviesRouter from './routes/movies.js';
-// import booksRouter from './routes/books.js';
+const booksRouter = require('./routes/books');
 // import songsRouter from './routes/songs.js';
 // import logsRouter from './routes/logs.js';
-// import customersRouter from './routes/customers.js';
+const customersRouter = require('./routes/customers');
 // import paymentRouter from './routes/payment.js';
 //
-// APP.use('/', homeRouter);
+APP.use('/', homeRouter);
 // APP.use('/management', managementRouter);
 // APP.use('/roles', rolesRouter);
 // APP.use('/staff', staffRouter);
-// APP.use('/consecutives', consecutivesRouter);
+APP.use('/consecutives', consecutivesRouter);
 // APP.use('/languages', languagesRouter);
 APP.use('/artists', artistsRouter);
 // APP.use('/visualGenres', visualGenresRouter);
 // APP.use('/musicalGenres', musicalGenresRouter);
-// APP.use('/editorials', editorialsRouter);
+APP.use('/editorials', editorialsRouter);
 // APP.use('/recordLabels', recordLabelsRouter);
 // APP.use('/movies', moviesRouter);
-// APP.use('/books', booksRouter);
+APP.use('/books', booksRouter);
 // APP.use('/music', songsRouter);
 // APP.use('/logs', logsRouter);
-// APP.use('/customers', customersRouter);
+APP.use('/customers', customersRouter);
 // APP.use('/payment', paymentRouter);
 
 APP.use('/avatar', express.static('resources/avatars'));

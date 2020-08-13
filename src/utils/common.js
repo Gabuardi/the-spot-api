@@ -14,10 +14,10 @@ function createDecodedData(encodedData, objectGenerator) {
 function readTemplate(file, type) {
   return new Promise((resolve, reject) => {
     fs.readFile(file, type, (err, data) => {
-      if (err) reject('File Not Found!');
+      if (err) console.log(err);
       resolve(data);
     });
-  });
+  }).catch((error) => console.log(error));
 }
 
 function filteredData (data, queryParams) {

@@ -1,11 +1,9 @@
 const express = require('express');
-const path = require('path');
+const {root} = require('../../root');
 const sql = require('mssql');
 const {encode, decode} = require('../utils/codification');
 const sqlResponseHandler = require('../utils/handlers');
 const {createDecodedData, readTemplate, filteredData, filterArrayValues, generateFilterOptions} = require('../utils/common');
-
-const __dirname = path.resolve();
 
 const ROUTER = express.Router();
 
@@ -27,14 +25,14 @@ function generateBook(el) {
     editorial: decode(el.editorial),
     genres: parseGenres(el.genres)
   }
-};
+}
 
 function generateBookTitle(el) {
   return {
     bookId: el.book_id,
     title: decode(el.title)
   }
-};
+}
 
 function replaceTemplate(html, data){
   let output = html.replace(/{%BOOKID%}/g, data.bookId);
@@ -47,7 +45,7 @@ function replaceTemplate(html, data){
   output = output.replace(/{%LANGUAGE%}/g, data.language);
 
   return output;
-};
+}
 
 // -------------------------------------------------------
 // BOOK HOME PAGE
@@ -58,8 +56,8 @@ ROUTER.get('/', async (req, res) => {
 
     let sqlRequest = new sql.Request();
 
-    let homeOutput = await readTemplate(`${__dirname}/views/client/books/index.html`, 'utf-8');
-    let cardOutput = await readTemplate(`${__dirname}/views/client/books/templates/card-book.html`, 'utf-8');
+    let homeOutput = await readTemplate(`${root}/views/client/books/index.html`, 'utf-8');
+    let cardOutput = await readTemplate(`${root}/views/client/books/templates/card-book.html`, 'utf-8');
     let artistsOutput = '<option>{%AUTHOR%}</option>';
     let genresOutput = '<option>{%GENRE%}</option>';
     let editorialsOutput = '<option>{%EDITORIAL%}</option>';
