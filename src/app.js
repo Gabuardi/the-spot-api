@@ -32,6 +32,7 @@ APP.listen(PORT, () => console.log(`- || APP RUNNING ||--> http://localhost:${PO
 // -----------------------------------------------------------------
 import homeRouter from './routes/home.js';
 import managementRouter from './routes/management/management.js';
+import managementStaffRouter from './routes/management/staff.js';
 import rolesRouter from './routes/roles.js'
 import staffRouter from './routes/staff.js';
 import consecutivesRouter from './routes/consecutives.js';
@@ -50,6 +51,7 @@ import paymentRouter from './routes/payment.js';
 
 APP.use('/', homeRouter);
 APP.use('/management', managementRouter);
+APP.use('/managemenet/staff', managementStaffRouter);
 APP.use('/roles', rolesRouter);
 APP.use('/staff', staffRouter);
 APP.use('/consecutives', consecutivesRouter);

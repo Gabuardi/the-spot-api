@@ -13,7 +13,7 @@ function generatePublicStaff(el) {
     email: decode(el.email_addr),
     securityQuestion: decode(el.security_question),
     securityAnswer: decode(el.security_answer),
-    roleFk: el.role_fk,
+    role: decode(el.role),
     created: dateStringParser(el.date_created),
     avatar: el.avatar
   }
@@ -27,7 +27,7 @@ function generatePrivateStaff(el) {
     email: decode(el.email_addr),
     securityQuestion: decode(el.security_question),
     securityAnswer: decode(el.security_answer),
-    roleFk: el.role_fk,
+    role: decode(el.role),
     created: dateStringParser(el.date_created),
     avatar: el.avatar
   }
