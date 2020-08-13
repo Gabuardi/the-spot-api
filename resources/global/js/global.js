@@ -115,28 +115,83 @@
 }(jQuery));
 
 /* ..............................................
-  Filter Url Params Manipulation
+  FILTER URL PARAMS MANIPULATION
   ................................................. */
 function ifEmpty(param, type, value) {
   if (param === '') {
     value = `?${type}=${value}`;
-    return value;
+    return value
   } else {
     value = `&${type}=${value}`;
-    return value;
+    return value
   }
-  ;
-};
+}
 
-function ifDuplicate() {
+function ifDuplicate(type, value) {
   let params = window.location.search;
-  params.cont
-};
+}
 
 function runNewUrl(type, value) {
   let newUrl = window.location.href;
   newUrl += `${ifEmpty(window.location.search, type, value)}`;
   window.location.href = newUrl;
+}
+
+/* ..............................................
+  SYNCHING PARAMS WITH FILTERS
+  ................................................. */
+
+function generateOptionsArray(selectElement) {
+  let optionsArray = [];
+
+  selectElement.each(function () {
+    optionsArray.push($(this).val());
+  });
+
+  return optionsArray
+}
+
+function generateParamArray(param) {
+  let paramArray = [];
+
+  param = param.replaceAll('%20', ' ').split('&');
+
+  param.forEach(el => {
+    paramArray.push(el.split('=')) 
+  });
+
+  return paramArray
+}
+
+// Generates Object from Param Array
+// Ex: 0: ['name'] 1: ['Jose']
+// --> { name: Jose }
+function generateParamObject(param) {
+  let paramArray = generateParamArray(param);
+  let paramObject = {};
+  
+  paramArray.forEach(el => {
+    Reflect.set(paramObject, el[0], el[1]);
+  });
+
+  return paramObject
+}
+
+function setValuesOnLoad(selectElement, selectOptions, param) {
+  let paramArray = generateParamArray(param);
+  let optionsArray = generateOptionsArray($(selectOptions));
+
+  paramArray.forEach(el => {
+    el = el[1].split(',');
+
+    if(optionsArray.includes(el[0])){
+      if(el.length > 1){
+        $(selectElement).val(el);
+      }else {
+        $(selectElement).val(el);
+      }
+    };
+  });
 }
 
 /* ..............................................

@@ -36,4 +36,20 @@
     let selected = $(this).val();
     runNewUrl('genres', selected);
   });
+
+  window.onload = () => {
+    let param = window.location.search.substring(1);
+
+    if(param !== ''){
+      setValuesOnLoad('#select-year', '#select-year option', param);
+
+      setValuesOnLoad('#select-language', '#select-language option', param);
+
+      setValuesOnLoad('#select-artist', '#select-artist option', param);
+
+      setValuesOnLoad('#select-genre', '#select-genre option', param);
+    }else {
+      console.log('No filter has been applied');
+    }
+  }
 })(jQuery);
