@@ -52,14 +52,64 @@ function generateMovie(el) {
   }
 }
 
-function generateMovieTitles(el) {
-  return {
-    movieId: el.movie_id,
-    title: encode(el.title)
-  }
+function filterByStringContain(dataset, filterValue, propToFilter) {
+  let filteredDataSet = [];
+  dataset.forEach(data => {
+    if (data[propToFilter].toLowerCase().includes(filterValue.toLocaleLowerCase())) filteredDataSet.push(data);
+  });
+  return filteredDataSet;
 }
 
-function replaceTemplate(html, data){
+function filterByValue(dataset, filterValue, propToFilter) {
+  let filteredDataSet = [];
+  dataset.forEach(data => {
+    if (data[propToFilter] == filterValue) filteredDataSet.push(data);
+  });
+  return filteredDataSet;
+}
+
+function filterByArray(dataSet, filterValueArray, propToFilter) {
+  let filteredDataSet = [];
+  dataSet.forEach(data => {
+    let match = true;
+    filterValueArray.forEach(filter => {
+      if (!data[propToFilter].includes(filter)) match = false;
+    });
+    if (match) filteredDataSet.push(data);
+  });
+  return filteredDataSet;
+}
+
+function filterMoviesList(dataSet, params) {
+  let filteredDataSet = dataSet;
+  for (let param in params) {
+    switch (param) {
+      case "title":
+        let titleParam = params.title;
+        filteredDataSet = filterByStringContain(filteredDataSet, titleParam, 'title');
+        break;
+      case "releaseYear":
+        let yearParam = params.releaseYear;
+        filteredDataSet = filterByValue(filteredDataSet, yearParam, 'releaseYear');
+        break;
+      case "language":
+        let langParam = params.language;
+        filteredDataSet = filterByValue(filteredDataSet, langParam, 'language');
+        break;
+      case "cast":
+        let castParam = params.cast.split(',');
+        filteredDataSet = filterByArray(filteredDataSet, castParam, 'cast');
+        break;
+      case "genres":
+        let genresParam = params.genres.split(',');
+        filteredDataSet = filterByArray(filteredDataSet, genresParam, 'genres');
+        break;
+    }
+  }
+  return filteredDataSet;
+}
+
+function replaceTemplate(html, data) {
   let output = html;
   output = output.replace(/{%MOVIEID%}/g, data.movieId);
   output = output.replace(/{%TITLE%}/g, data.title);
@@ -179,28 +229,27 @@ ROUTER.get('/', async (req, res) => {
     let languagesOutput = '<option>{%LANGUAGE%}</option>';
 
     sqlRequest.execute('[usp_movies_get_all]', async (err, data) => {
-      if(err) console.log(`ERROR!!! ${err}`);
+      if (err) console.log(`ERROR!!! ${err}`);
 
       let movieData = await createDecodedData(data.recordset[0], generateMovie);
+      let finalData = filterMoviesList(movieData, queryObj);
 
-      let finalData = filteredData(movieData, queryObj);
-
-      let year = await generateFilterOptions(finalData, 'releaseYear');
+      let year = await generateFilterOptions(movieData, 'releaseYear');
       yearsOutput = await year.map(el => yearsOutput.replace(/{%YEAR%}/g, el)).join('');
       homeOutput = await homeOutput.replace('{%YEAR_OPTION%}', yearsOutput);
 
-      let language = await generateFilterOptions(finalData, 'language');
+      let language = await generateFilterOptions(movieData, 'language');
       languagesOutput = await language.map(el => languagesOutput.replace(/{%LANGUAGE%}/g, el)).join('');
       homeOutput = await homeOutput.replace('{%LANGUAGE_OPTION%}', languagesOutput);
 
       cardOutput = await finalData.map(el => replaceTemplate(cardOutput, el)).join('');
       homeOutput = await homeOutput.replace('{%MOVIE_CARD%}', cardOutput);
 
-      let artists = await filterArrayValues(finalData, 'cast');
+      let artists = await filterArrayValues(movieData, 'cast');
       artistsOutput = await artists.map(el => artistsOutput.replace(/{%ARTIST%}/g, el)).join('');
       homeOutput = await homeOutput.replace('{%CAST_OPTION%}', artistsOutput);
 
-      let genres = await filterArrayValues(finalData, 'genres');
+      let genres = await filterArrayValues(movieData, 'genres');
       genresOutput = await genres.map(el => genresOutput.replace(/{%GENRE%}/g, el)).join('');
       homeOutput = await homeOutput.replace('{%GENRES_OPTION%}', genresOutput);
 
@@ -209,14 +258,15 @@ ROUTER.get('/', async (req, res) => {
         .type('text/html')
         .send(homeOutput);
     });
-  } catch(err) {
+  } catch (err) {
     res
       .status(400)
       .json({
         status: 'failed',
         message: `ERROR!!! ${err}`
       });
-  };
+  }
+  ;
 });
 
 // -------------------------------------------------------

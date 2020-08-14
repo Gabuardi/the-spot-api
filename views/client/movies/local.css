@@ -100,3 +100,23 @@
   height: 100vh;
   background: rgba(0, 0, 0, 0.7);
 }
+
+/* FILTER BUTTON */
+.apply-filters {
+  position: absolute;
+  opacity: 0;
+  top: 50px;
+  left: calc(50% - 60px);
+  transition: all 0.3s ease-in;
+}
+
+.apply-filters.active {
+  top: 24px;
+  opacity: 1;
+  box-shadow: 2px 9px 23px -4px rgba(0,0,0,0.75);
+}
+
+.apply-filters.active:hover {
+  box-shadow: none;
+}
+
